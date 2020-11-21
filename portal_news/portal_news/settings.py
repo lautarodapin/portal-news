@@ -143,6 +143,5 @@ TINYMCE_DEFAULT_CONFIG = {
     "theme":"silver",
 
 }
-
 # Whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
