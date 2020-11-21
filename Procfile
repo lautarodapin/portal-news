@@ -1,2 +1,2 @@
 config:set DISABLE_COLLECTSTATIC=1
-web: gunicorn portal_news.portal_news.wsgi:application --log-file -
+web: cd portal_news/ && gunicorn portal_news.wsgi:application --log-file -
