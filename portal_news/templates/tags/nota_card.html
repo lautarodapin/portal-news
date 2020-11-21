@@ -1,0 +1,50 @@
+{% load static %}
+{% load humanize %}
+{% url 'news_app:nota-detail' object.slug as nota_detail %}
+{% url 'news_app:nota-update' object.slug as nota_update %}
+{% url 'news_app:nota-delete' object.slug as nota_delete %}
+
+
+<div class="card h-100">
+	<img src="..." class="card-img-top" alt="...">
+	<div class="card-body">
+		<h5 class="card-title">{{ object.titulo|lower|capfirst }}</h5>
+		<h6 class="card-subtitle">{{ object.subtitulo|lower|capfirst }}</h6>
+		<p class="card-text">{{ object.cuerpo|safe|truncatechars:255 }}</p>
+	</div>
+	<div class="card-footer">
+		<a href="{{ nota_detail }}" class="card-link">
+			Leer
+		</a>
+		{% if request.user == object.autor %}
+		<a href="{{ nota_update }}" class="card-link">
+			Editar
+		</a>
+		<a href="{{ nota_delete }}" class="card-link">
+			Borrar
+		</a>
+		{% endif %}
+	</div>
+	<div class="card-footer text-muted">
+		<small>
+			<p class="card-text">
+				Creado
+				{{ object.created_at|naturaltime }} por {{ object.autor }}
+			</p>
+			{% if object.created_at|date:"YmdHi" < object.mod_at|date:"YmdHi" %} {#  #}
+			<p class="card-text">
+				Ultima edicion
+				{{ object.mod_at|naturaltime }} por {{ object.autor }}
+			</p>
+			{% endif %}
+		</small>
+	</div>
+</div>
+<script>
+	document.querySelectorAll(".card .card-body img").forEach(
+		function (e) {
+			e.setAttribute("width", "100%");
+			e.setAttribute("height", "100%");
+		}
+	);
+</script>

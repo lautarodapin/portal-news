@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block content %} 
-{% for nota in object_list %}
-    {{nota}}    
-    <a href="{% url 'news_app:nota-detail' nota.slug %}">detalle</a>
-    <a href="{% url 'news_app:nota-update' nota.slug %}">editar</a>
-    <a href="{% url 'news_app:nota-delete' nota.slug %}">borrar</a>
-    <br>
-    <hr>
-    <br>
-{% endfor %}
-{% endblock content %}
+{% block breadcrumb %}
+{% breadcrumb title="Inicio" %}
+{% endblock breadcrumb %}
+{% block container %}
+<div class="row row-cols-1 row-cols-md-2 justify-content-center">
+    {% for nota in object_list %}
+    <div class="col mb-4">
+        {% nota_card nota %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock container %}

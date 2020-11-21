@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import *
 from .forms import *
 
+
 class NotaListView(ListView):
     model = Nota
 
@@ -20,7 +21,7 @@ class NotaCreateView(SuccessMessageMixin, CreateView):
         obj = form.save(commit=False)
         obj.autor = self.request.user
         obj.save()
-        super().form_valid(form)
+        return super().form_valid(form)
 
 class NotaUpdateView(SuccessMessageMixin, UpdateView):
     model = Nota

@@ -1,0 +1,22 @@
+{% extends "base/main_base_template.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+
+{% block content %}
+{{ form.media.css }} 
+<div class="container">
+    <h2>Registrar usuario</h2>
+    
+    <form action="?next={{ request.META.HTTP_REFERER }}" method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input type="submit" value="Registrar" class="btn btn-lg btn-success">
+    </form>
+    <br>
+    <small class="text-muted">Ya tiene usuario? <a class="" href="{% url 'login' %}">Iniciar sesión</a></small>
+</div>
+{{ form.media.js }}
+{% endblock content %}

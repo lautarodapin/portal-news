@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>{{ title|default:"News App" }}</title>
+    <title>{{ title|default:"Lengua liberal" }}</title>
     {% block extra_head %}
     {% endblock extra_head %}
 </head>
@@ -14,30 +14,63 @@
 <body>
 
     <head>
-        {% block nav_bar %}
-        <nav class="navbar sticky-top navbar-light bg-light">
+
+        <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             {% url 'news_app:nota-list' as link %}
-            <a class="navbar-brand {% is_active link %}" href="{{ link }}">
-                Inicio
+            <a class="navbar-brand {% is_active link %} ml-2" href="{{ link }}">
+                LOGO
             </a>
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                <ul class="navbar-nav mr-auto">
 
-
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    {% url 'news_app:nota-list' as link %}
-                    <a class="nav-link {% is_active link %}" href="{{ link }}">
-                        Inicio
-                    </a>
-                </li>
-                <li class="nav-item">
-                    {% url 'news_app:nota-create' as link %}
-                    <a class="nav-link {% is_active link %}" href="{{ link }}">
-                        Crear nota
-                    </a>
-                </li>
-            </ul>
+                    <li class="nav-item">
+                        {% url 'news_app:nota-list' as link %}
+                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% url 'news_app:nota-create' as link %}
+                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                            Crear nota
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="mx-auto order-0">
+                <a class="navbar-brand mx-auto">
+                    {{ title|upper|default:"Lengua liberal" }}
+                </a>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="flex-sm-fill text-sm-center nav-link disabled" href="#">
+                            {{ request.user|capfirst }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'logout' %}?next={{ request.get_full_path }}">
+                            Cerrar sesion
+                        </a>
+                    </li>
+                    {% else %}
+                    {% url 'login' as login %}
+                    <li class="nav-item">
+                        <a class="flex-sm-fill text-sm-center nav-link {% is_active login %}" href="{{ login }}">
+                            Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
         </nav>
-        {% endblock nav_bar %}
+
+
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 {% block breadcrumb %}
@@ -45,18 +78,24 @@
             </ol>
         </nav>
         {% if messages %}
-            {% for m in messages %}
-            <div class="alert alert-{% if m.tags %}{{ m.tags }}{% endif %}">
-                <li>
-                    {{ m|safe }}
-                </li>
-            </div>
-            {% endfor %}
+        {% for m in messages %}
+        <div class="alert alert-{% if m.tags %}{{ m.tags }}{% endif %}">
+            <li>
+                {{ m|safe }}
+            </li>
+        </div>
+        {% endfor %}
         {% endif %}
     </head>
     <main>
-        {% block content %}
-        {% endblock content %}
+        <div class="main">
+            {% block content %}
+                <div class="container">
+                    {% block container %}
+                    {% endblock container %}
+                </div>
+            {% endblock content %}
+        </div>
     </main>
     <footer>
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

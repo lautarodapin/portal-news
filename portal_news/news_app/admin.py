@@ -31,7 +31,15 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Nota)
 class NotaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'subtitulo', 'cuerpo', 'slug', 'autor')
+    list_display = (
+    'id',
+     'titulo',
+     'subtitulo',
+     'slug',
+     'autor',
+     'created_at',
+     'mod_at',
+    )
     list_filter = ('autor',)
     search_fields = ('slug',)
 

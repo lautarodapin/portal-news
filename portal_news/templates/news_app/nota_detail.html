@@ -1,4 +1,33 @@
 {% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+{% url 'news_app:nota-list' as link %}
+{% breadcrumb title="Inicio" link=link %}
+{% url 'news_app:nota-detail' nota.slug as link %}
+{% breadcrumb title="Nota "|add:nota.titulo|add:" de "|add:nota.autor.username|lower|default:"Nota" link=link %}
+{% endblock breadcrumb %}
+
 {% block content %}
-{{nota}}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">{{ nota.titulo }}</h1>
+        <p class="lead">{{ nota.subtitulo }}</p>
+    </div>
+</div>
+<div class="container">
+    <small>
+        <p class="text-muted">
+            Autor: {{ nota.autor|lower }}
+        </p>
+    </small>
+    <div class="text-break">
+        {{ nota.cuerpo|safe }}
+    </div>
+    <small>
+        <p class="text-muted">
+            Creado {{ nota.created_at|naturaltime }}
+        </p>
+    </small>
+</div>
 {% endblock content %}

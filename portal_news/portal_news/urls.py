@@ -23,4 +23,5 @@ urlpatterns = [
     path('tiny-mce/', include('tinymce.urls')),
 
     path('', include('news_app.urls')),
+    path('account/', include('login.urls')),
 ]

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% load crispy_forms_tags %}
-{% block content %}
+{% block container %}
 <form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
+    <p>Estas seguro que deseas borrar la nota "{{ object.title|lower|capfirst }}"?</p>
+    <input type="submit" value="Confirmar" class="btn btn-lg btn-warning">
 </form>
-{% endblock content %}
+{% endblock container %}

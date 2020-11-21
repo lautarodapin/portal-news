@@ -1,0 +1,17 @@
+{% load static %}
+{% if link %}
+{% is_active link as is_active %}
+{% endif %}
+<li class="breadcrumb-item {{ is_active }}" {% if is_active %}aria-current="page" {% endif %}>
+    {% if link and not is_active %}
+    <a href="{{ link }}">
+        {% if img %}
+        <img src="{% static img %}" {% if size %} height="{{ size }}" width="{{ size }}" {% else %} width="16" height="16"
+            {% endif %} title="{% if title %}{{ title }}{% endif %}">
+        {% endif %}
+        {{ title }}
+    </a>
+    {% else %}
+    {{ title }}
+    {% endif %}
+</li>

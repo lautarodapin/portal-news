@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block container %}
+<form action="{{ app_path }}?next={{ next|default:request.META.HTTP_REFERER }}" method="post">
+    {% crispy form %}
+    <input type="submit" value="Login" class="btn btn-lg btn-info ">
+</form>
+{% endblock container %}
