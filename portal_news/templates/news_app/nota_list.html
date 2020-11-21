@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %} 
+{% for nota in object_list %}
+    {{nota}}    
+    <a href="{% url 'news_app:nota-detail' nota.slug %}">detalle</a>
+    <a href="{% url 'news_app:nota-update' nota.slug %}">editar</a>
+    <a href="{% url 'news_app:nota-delete' nota.slug %}">borrar</a>
+    <br>
+    <hr>
+    <br>
+{% endfor %}
+{% endblock content %}
