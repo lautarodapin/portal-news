@@ -9,4 +9,7 @@ urlpatterns = [
     path('nota/<slug:slug>', NotaDetailView.as_view(), name="nota-detail"),
     path('nota/<slug:slug>/editar', NotaUpdateView.as_view(), name="nota-update"),
     path('nota/<slug:slug>/borrar', NotaDeleteView.as_view(), name="nota-delete"),
+
+    path('comentario/crear', ComentarioCreateView.as_view(), name="comentario-create"),
+    path('comentario/<int:pk>/editar', ComentarioUpdateView.as_view(), name="comentario-update"),
 ]
