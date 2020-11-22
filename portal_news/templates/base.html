@@ -1,3 +1,4 @@
+{% load ads_tags %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -6,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    {# Google AdSense #}
+    <script data-ad-client="ca-pub-4173550974749865" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <title>{{ title|default:"Lengua liberal" }}</title>
     {% block extra_head %}
     {% endblock extra_head %}
@@ -48,6 +52,13 @@
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
+                    {% if user.is_superuser or user.is_staff %}
+                    <li class="nav-item">
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'admin:index' %}">
+                            Admin
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="flex-sm-fill text-sm-center nav-link disabled" href="#">
                             {{ request.user|capfirst }}
@@ -88,6 +99,12 @@
         {% endif %}
     </head>
     <main>
+    {% render_ads_zone 'Content' %}
+    {% render_ads_zone 'Contenido' %}
+    {% get_ads_count 'Content' as ads_count %}
+    {{ads_count}}
+    {% get_ads_count 'Content' as ads_count %}
+    {{ads_count}}
         <div class="main">
             {% block content %}
                 <div class="container">

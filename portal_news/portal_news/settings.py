@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'news_app.apps.NewsAppConfig',
     'login.apps.LoginAppConfig',
+    'ads', 'sekizai',
     'django_extensions',
     'tinymce',
     'crispy_forms',
@@ -76,9 +77,12 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'sekizai.context_processors.sekizai',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'builtins':['utils.templatetags.tags',],
+            'builtins':[
+                'utils.templatetags.tags',
+            ],
         },
     },
 ]
@@ -151,3 +155,63 @@ TINYMCE_DEFAULT_CONFIG = {
 # Whitenoise
 
 
+
+
+from django.utils.translation import gettext_lazy as _
+# ADS
+ADS_GOOGLE_ADSENSE_CLIENT = None  # 'ca-pub-xxxxxxxxxxxxxxxx'
+
+ADS_ZONES = {
+    'header': {
+        'name': _('Header'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        },
+        'google_adsense_slot': None,  # 'xxxxxxxxx',
+        'google_adsense_format': None,  # 'auto'
+    },
+    'content': {
+        'name': _('Content'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        },
+        'google_adsense_slot': None,  # 'xxxxxxxxx',
+        'google_adsense_format': None,  # 'auto'
+    },
+    'sidebar': {
+        'name': _('Sidebar'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        }
+    }
+}
+
+ADS_DEFAULT_AD_SIZE = '720x150'
+
+ADS_DEVICES = (
+    ('xs', _('Extra small devices')),
+    ('sm', _('Small devices')),
+    ('md', _('Medium devices (Tablets)')),
+    ('lg', _('Large devices (Desktops)')),
+    ('xl', _('Extra large devices (Large Desktops)')),
+)
+
+ADS_VIEWPORTS = {
+    'xs': 'd-block img-fluid d-sm-none',
+    'sm': 'd-none img-fluid d-sm-block d-md-none',
+    'md': 'd-none img-fluid d-md-block d-lg-none',
+    'lg': 'd-none img-fluid d-lg-block d-xl-none',
+    'xl': 'd-none img-fluid d-xl-block',
+}
