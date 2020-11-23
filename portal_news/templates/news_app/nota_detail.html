@@ -64,6 +64,8 @@
         No posee comentarios
         {% endfor %}
     </div>
+    {% if user.is_authenticated %}
+    
     <div class="row">
         <div class="col-12">
             <form id="comment-form" action="{% url 'news_app:comentario-create' %}" method="post">
@@ -80,30 +82,33 @@
             </form>
         </div>
     </div>
+    {% else %}
+    para comentar debe <a href="{% url 'login' %}">logearse</a>
+    {% endif %}
 </div>
 {% endblock content %}
 
 {% block end_scripts %}
 <script>
     const comentario = `
-<div class="col-12 mb-2">
-    <div class="card">
-        <div class="card-body">
-            <p class="card-title">
-                {{ comentario.autor.username|lower|capfirst }}
-            </p>
-            <p class="card-text">
-                {{ comentario.cuerpo|safe }}
-            </p>
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">
+                        {{ comentario.autor.username|lower|capfirst }}
+                    </p>
+                    <p class="card-text">
+                        {{ comentario.cuerpo|safe }}
+                    </p>
+                </div>
+                <div class="card-footer text-muted pt-0 pb-0">
+                    <small class="card-text">
+                        {{ comentario.created_at|naturaltime }}
+                    </small>
+                </div>
+            </div>
         </div>
-        <div class="card-footer text-muted pt-0 pb-0">
-            <small class="card-text">
-                {{ comentario.created_at|naturaltime }}
-            </small>
-        </div>
-    </div>
-</div>
-`;
+    `;
     $(document).ready(function () {
         document.querySelectorAll("#cuerpo img").forEach(function (e) {
             $(e).width("100%");
@@ -112,20 +117,17 @@
         $('.row .col-12 .d-flex img').on("click", function(){
             var id = $(this).data("id")
             var url = "{% url 'news_app:comentario-update' 12345 %}".replace(/12345/, id);
-            console.log(url)
             $("#cuerpo-" + id).html(`
-            <form id="temp-form" action="${url}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_cuerpo">Comentario</label>
-                    <textarea name="cuerpo" id="id_cuerpo" class="form-control" rows="3">${$("#cuerpo-"+id).text().trim()}</textarea>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Comentar" class="btn btn-sm btn-info">
-                </div>
-            </form>
+                <form id="temp-form" action="${url}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea name="cuerpo" id="id_cuerpo" class="form-control" rows="3">${$("#cuerpo-"+id).text().trim()}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-sm btn-info">
+                    </div>
+                </form>
             `)
-
             $('#temp-form').on('submit', function (e) {
                 e.preventDefault();
                 $.ajax({
@@ -133,9 +135,7 @@
                     url: $("#temp-form").attr("action"),
                     data: $('#temp-form').serialize(),
                     success: function (resp) {
-                        $('#temp-form').html(`
-                            ${resp.cuerpo}
-                        `);
+                        $('#temp-form').html(`${resp.cuerpo}`);
                     }
                 });
                 return false;

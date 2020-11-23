@@ -10,7 +10,8 @@
 	<div class="card-body">
 		<h5 class="card-title">{{ object.titulo|lower|capfirst }}</h5>
 		<h6 class="card-subtitle">{{ object.subtitulo|lower|capfirst }}</h6>
-		<p class="card-text">{{ object.cuerpo|safe|truncatechars:255 }}</p>
+		{% comment %} <p class="card-text">{{ object.cuerpo|cut_chars:255|safe}}</p> {% endcomment %}
+		<p class="card-text">{{ object.cuerpo|truncatechars:255|safe }}</p>
 	</div>
 	<div class="card-footer">
 		<a href="{{ nota_detail }}" class="card-link">

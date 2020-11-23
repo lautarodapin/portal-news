@@ -17,3 +17,9 @@ def nota_card(context, nota):
 @register.inclusion_tag('tags/breadcrumb.html', takes_context=True)
 def breadcrumb(context, title, link=None, img=None, size=None):
     return dict(context=context, title=title, link=link, img=img, size=size)
+
+
+@register.filter
+def cut_chars(string: str, amount=100) -> str:
+    cutted_string = string[:amount]
+    return cutted_string
