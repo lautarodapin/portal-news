@@ -240,6 +240,6 @@ INSTALLED_APPS += ('portal_news', 'django_celery_beat',)
 # EMAIL
 # EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #? Muestra en consola
-EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-MAILGUN_ACCESS_KEY = config("MAILGUN_ACCESS_KEY")
-MAILGUN_SERVER_NAME = 'https://api.mailgun.net/v3/sandbox06c86d2720174571847ca3f6c3fe1ff6.mailgun.org?'
+# EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+# MAILGUN_ACCESS_KEY = config("MAILGUN_ACCESS_KEY")
+# MAILGUN_SERVER_NAME = 'https://api.mailgun.net/v3/sandbox06c86d2720174571847ca3f6c3fe1ff6.mailgun.org?'
