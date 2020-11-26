@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ["*",]
 AUTH_USER_MODEL = 'news_app.Usuario'
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'news_app.apps.NewsAppConfig',
+    'chat.apps.ChatConfig',
     'login.apps.LoginAppConfig',
     'ads', 'sekizai',
     'django_extensions',
@@ -88,7 +90,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'portal_news.wsgi.application'
+ASGI_APPLICATION = "portal_news.asgi.application"
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [config("REDIS_URL")],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -215,3 +227,19 @@ ADS_VIEWPORTS = {
     'lg': 'd-none img-fluid d-lg-block d-xl-none',
     'xl': 'd-none img-fluid d-xl-block',
 }
+
+
+
+# CELERY
+INSTALLED_APPS += ('portal_news', 'django_celery_beat',)
+# BROKER_URL = 'redis://localhost:6379/1'
+# BROKER_TRANSPORT = 'redis'
+# CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+# EMAIL
+# EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #? Muestra en consola
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = config("MAILGUN_ACCESS_KEY")
+MAILGUN_SERVER_NAME = 'https://api.mailgun.net/v3/sandbox06c86d2720174571847ca3f6c3fe1ff6.mailgun.org?'
