@@ -46,5 +46,5 @@ class RoomCreateView(SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('chat:room-detail', kwargs={'code':self.object.slug})
+        return reverse_lazy('chat:room-detail', kwargs={'slug':self.object.slug})
         
