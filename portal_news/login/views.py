@@ -39,7 +39,7 @@ class LoginView(FormNextMixin, FormView):
 
 class RegisterView(FormNextMixin, CreateView):
     template_name = 'login/register.html'
-    form_class = UserCreationForm
+    form_class = UserForm
     success_url = '/'
 
     def form_valid(self, form):

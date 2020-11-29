@@ -48,6 +48,12 @@
                             Crear nota
                         </a>
                     </li>
+                    <li class="nav-item">
+                        {% url 'chat:room-list' as link %}
+                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                            Chat Rooms
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="mx-auto order-0">

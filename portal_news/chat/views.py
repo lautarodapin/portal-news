@@ -1,10 +1,50 @@
 # chat/views.py
-from django.shortcuts import render
+from django.shortcuts import render, reverse
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, permission_required
 
-def index(request):
-    return render(request, 'chat/index.html', {})
+from .models import *
+from .forms import *
 
-def room(request, room_name):
-    return render(request, 'chat/room.html', {
-        'room_name': room_name
-    })
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomListView(ListView):
+    model = Room
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["room_form"] = RoomForm
+        return context
+    
+@method_decorator(login_required, name='dispatch')
+class RoomDetailView(DetailView):
+    model = Room
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["message_form"] = MessageForm
+        # print(self.request.session.session_key)
+        context["history"] = self.object.messages.all().order_by('-created_at')[:100]
+        return context
+    
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomCreateView(SuccessMessageMixin, CreateView):
+    model = Room
+    form_class = RoomForm
+    success_url = '.'
+    success_message = "%(nombre)s creado con exito!"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.host = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('chat:room-detail', kwargs={'code':self.object.slug})
+        

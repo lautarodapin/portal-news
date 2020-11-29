@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block container %}   
+    <h3>Chat Room de {{ object.host }}</h3>
+    <div class="container chat-container overflow-auto" style="max-height: 60vh;">
+        {% for message in history reversed %}
+        <div class="card">
+            <div class="card-body">
+                {{message.created_at|date:"d-m-Y H:i:s"}}: {{message.text}}
+            </div>
+        </div>
+        {% endfor %} 
+    </div>
+    {{message_form.text|as_crispy_field}}
+    <input id="chat-message-submit" type="button" value="Enviar" class="btn btn-info">
+{% endblock container %}
+
+{% block end_scripts %}
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+        const card = `
+        <div class="card">
+            <div class="card-body">
+                {}
+            </div>
+        </div>
+        `;
+        const roomCode = "{{ view.kwargs.slug }}";
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+
+        function createSocket(){
+            const chatSocket = new WebSocket(
+                ws_scheme
+                + '://'
+                + window.location.host
+                + '/ws/chat/'
+                + roomCode
+                + '/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                $('.chat-container').append(card.replace(/{}/, data.message));
+                $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+                setTimeout(createSocket, 1000*10)
+            };
+
+            document.querySelector('#id_text').focus();
+            document.querySelector('#id_text').onkeyup = function(e) {
+                if (e.keyCode === 13) {  // enter, return
+                    document.querySelector('#chat-message-submit').click();
+                }
+            };
+
+            document.querySelector('#chat-message-submit').onclick = function(e) {
+                const messageInputDom = document.querySelector('#id_text');
+                const message = messageInputDom.value;
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';
+            };
+        }
+        createSocket();
+    </script>
+{% endblock end_scripts %}

@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block container %}
-<form action="{{ app_path }}?next={{ next|default:request.META.HTTP_REFERER }}" method="post">
+{% get_request 'next' as next %}
+<form action="{{ app_path }}?next={{ next|default:'' }}" method="post">
+    {% csrf_token %}
     {% crispy form %}
     <input type="submit" value="Login" class="btn btn-lg btn-info ">
 </form>
+Si no posee una cuenta puede <a href="{% url 'register' %}">registrarse</a>.
+
 {% endblock container %}

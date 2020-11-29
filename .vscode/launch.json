@@ -8,9 +8,10 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
+            "python": "${workspaceFolder}\\Scripts\\python.exe",
             "program": "${workspaceFolder}\\portal_news\\manage.py",
             "args": [
-                "runserver"
+                "runserver",
             ],
             "django": true
         }

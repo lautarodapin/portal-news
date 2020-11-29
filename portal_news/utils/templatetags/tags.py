@@ -23,3 +23,9 @@ def breadcrumb(context, title, link=None, img=None, size=None):
 def cut_chars(string: str, amount=100) -> str:
     cutted_string = string[:amount]
     return cutted_string
+
+
+@register.simple_tag(takes_context=True)
+def get_request(context, parameter):
+    request = context["request"]
+    return request.GET.get(parameter, None)

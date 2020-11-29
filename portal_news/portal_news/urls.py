@@ -25,5 +25,5 @@ urlpatterns = [
 
     path('', include('news_app.urls')),
     path('chat/', include('chat.urls')),
-    path('account/', include('login.urls')),
+    path('accounts/', include('login.urls')),
 ]

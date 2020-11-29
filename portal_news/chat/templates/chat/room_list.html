@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block container %}
+<h2>Lista de rooms</h2>
+    {% for object in object_list %}
+        <a href="{% url 'chat:room-detail' object.slug %}">Ingresar</a>
+        al room 
+        {{object.nombre}}
+        del usuario 
+        {{ object.host }}
+        , cantidad de mensajes: {{object.messages.count}}
+        {% if not forloop.last %}
+            <hr>        
+        {% endif %}
+    {% empty %}
+        <p>No hay rooms</p>
+    {% endfor %}
+
+    <hr>
+    <h4>Crear un nuevo Room</h4>
+    <form action="{% url 'chat:room-create' %}" method="post">
+        {% csrf_token %}
+        {{room_form|crispy}}
+        <input type="submit" value="Crear" class="btn btn-info">
+    </form>
+
+{% endblock container %}
