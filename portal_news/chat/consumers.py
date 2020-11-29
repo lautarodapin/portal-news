@@ -57,7 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_room(self):
         print("Obteniendo room")
-        return Room.objects.get(code=self.room_name)
+        return Room.objects.get(slug=self.room_name)
     
     @database_sync_to_async
     def save_message(self, message:str, room:Room):
