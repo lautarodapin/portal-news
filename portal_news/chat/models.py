@@ -29,4 +29,4 @@ class Room(AbstractDatetime, models.Model):
 class Message(AbstractDatetime, models.Model):
     room = models.ForeignKey("chat.Room", on_delete=models.CASCADE, related_name="messages")
     text = models.TextField(max_length=500)
-    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="messages", null=True, default=None)
