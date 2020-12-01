@@ -22,6 +22,10 @@ class Room(AbstractDatetime, models.Model):
     host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rooms", default=1)
     slug = models.SlugField(max_length=50, unique=True, blank=True)
 
+    def __str__(self):
+        return f"Room({self.nombre} {self.host})"
+    
+
     def save(self, *args, **kwargs):
         self.slug = slugify("{obj.nombre}-{obj.host}".format(obj=self))
         super().save(*args, **kwargs)
@@ -30,3 +34,7 @@ class Message(AbstractDatetime, models.Model):
     room = models.ForeignKey("chat.Room", on_delete=models.CASCADE, related_name="messages")
     text = models.TextField(max_length=500)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="messages", null=True, default=None)
+
+    def __str__(self):
+        return f"Message({self.user} {self.room})"
+    

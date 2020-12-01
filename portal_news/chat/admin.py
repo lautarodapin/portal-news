@@ -11,5 +11,5 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mod_at', 'created_at', 'room', 'text')
-    list_filter = ('mod_at', 'created_at', 'room')
+    list_display = ('id', 'mod_at', 'created_at', 'room', 'text', 'user')
+    list_filter = ('mod_at', 'created_at', 'room', 'user')
