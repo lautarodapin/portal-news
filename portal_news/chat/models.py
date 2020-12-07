@@ -21,6 +21,8 @@ class Room(AbstractDatetime, models.Model):
     nombre = models.CharField(max_length=255, null=False, blank=False)
     host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rooms", default=1)
     slug = models.SlugField(max_length=50, unique=True, blank=True)
+    current_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="current_rooms")
+
 
     def __str__(self):
         return f"Room({self.nombre} {self.host})"

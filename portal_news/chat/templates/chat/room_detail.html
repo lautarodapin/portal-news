@@ -1,20 +1,37 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block container %}   
+{% block content %}   
     <h3>Chat Room de {{ object.host }}</h3>
-    <div class="container chat-container overflow-auto" style="max-height: 60vh;">
-        {% for message in history reversed %}
-        <div class="card">
-            <div class="card-body">
-                {{message.created_at|date:"d-m-Y H:i:s"}} {{ message.user|default:"-" }} {{message.text}}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-lg-2 mb-2">
+                <ul class="list-group current-users">
+                    {% for usuario in object.current_users.all %}
+                        <li class="list-group-item">{{ usuario }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-sm-12 col-lg-10">
+                <div class="container">
+                    <div class="container chat-container overflow-auto" style="max-height: 60vh;">
+                        {% for message in history reversed %}
+                        <div class="card">
+                            <div class="card-body">
+                                {{ message.created_at|date:"d-m-Y H:i:s" }}
+                                {{ message.user|default:"-" }} {{ message.text }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {{ message_form.text|as_crispy_field }}
+                    <input id="chat-message-submit" type="button" value="Enviar" class="btn btn-info">
+                </div>
             </div>
         </div>
-        {% endfor %} 
     </div>
-    {{message_form.text|as_crispy_field}}
-    <input id="chat-message-submit" type="button" value="Enviar" class="btn btn-info">
-{% endblock container %}
+{% endblock content %}
 
 {% block end_scripts %}
     {{ room_name|json_script:"room-name" }}
@@ -42,8 +59,16 @@
 
             chatSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                $('.chat-container').append(card.replace(/{}/, data.message));
-                $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+                if ("usuarios" in data){
+                    var usuarios = "";
+                    data.usuarios.forEach(function(e){
+                        usuarios += `<li class="list-group-item">${e}</li>`;
+                    });
+                    $('.current-users').html(usuarios);
+                } else if ("message" in data){
+                    $('.chat-container').append(card.replace(/{}/, data.message));
+                    $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+                }
             };
 
             chatSocket.onclose = function(e) {

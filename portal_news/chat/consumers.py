@@ -4,6 +4,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.utils.timezone import now
 from .models import Message, Room
+from django.conf import settings
 class ChatConsumer(AsyncWebsocketConsumer):
     
     async def connect(self):
@@ -11,15 +12,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'chat_%s' % self.room_name
         self.user = self.scope["user"]
         # Join room group
+        room = await self.get_room() 
+        await self.add_user_to_room(room)
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
 
         await self.accept()
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type':'update_users',
+                'usuarios':await self.current_users(room)
+            }
+        )
 
     async def disconnect(self, close_code):
-        # Leave room group
+        room = await self.get_room()
+        await self.remove_user_to_room(room)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -44,6 +55,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    async def update_users(self, event:dict):
+        await self.send(text_data=json.dumps({'usuarios':event["usuarios"]}))
+
     # Receive message from room group
     async def chat_message(self, event:dict):
         message = event["message"]
@@ -52,16 +66,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message
         }))
 
-
     @database_sync_to_async
-    def get_room(self):
+    def get_room(self)->Room:
         return Room.objects.get(slug=self.room_name)
     
     @database_sync_to_async
     def save_message(self, message:str, room:Room):
         Message.objects.create(room=room, text=message, user=self.user)
 
+    @database_sync_to_async
+    def add_user_to_room(self, room:Room):
+        room.current_users.add(self.user)
+        room.save()
+    
+    @database_sync_to_async
+    def remove_user_to_room(self, room:Room):
+        room.current_users.remove(self.user)
+        room.save()
 
+    @database_sync_to_async
+    def current_users(self, room:Room):
+        return [usuario.username for usuario in room.current_users.all()]
 
 
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer, AsyncAPIConsumer
