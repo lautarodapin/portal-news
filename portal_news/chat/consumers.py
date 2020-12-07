@@ -10,7 +10,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
         self.user = self.scope["user"]
-        print("connectado al room ", self.room_name)
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -29,8 +28,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        print("Recibio datos")
+        message = "%s %s: %s" % (
+            now().strftime("%d-%m-%Y %H:%M:%S"), 
+            self.user, 
+            text_data_json['message']) #? El receive se ejecuta en un solo consumidor
         room = await self.get_room()
         await self.save_message(message, room)
 
@@ -44,10 +45,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from room group
-    async def chat_message(self, event):
-        print("Chat message")
-        message = "%s %s: %s" % (now().strftime("%d-%m-%Y %H:%M:%S"), self.user, event['message'])
-
+    async def chat_message(self, event:dict):
+        message = event["message"]
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
@@ -56,10 +55,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_room(self):
-        print("Obteniendo room")
         return Room.objects.get(slug=self.room_name)
     
     @database_sync_to_async
     def save_message(self, message:str, room:Room):
-        print("Guardando mensaje", message)
         Message.objects.create(room=room, text=message, user=self.user)
+
+
+
+
+from djangochannelsrestframework.generics import GenericAsyncAPIConsumer, AsyncAPIConsumer
+from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin
+from djangochannelsrestframework.observer import model_observer
+from .serializers import UserSerializer
+from news_app.models import Usuario
+
+class TestConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
+    queryset = Usuario.objects.all()
+    serializer_class = UserSerializer
+
+
+class UsuarioConsumerObserver(GenericAsyncAPIConsumer):
+    queryset = Usuario.objects.all()
+    serializer_class = UserSerializer
+    async def accept(self, **kwargs):
+        await super().accept(** kwargs)
+        await self.model_change.subscribe()
+
+
+    @model_observer(Usuario)
+    async def model_change(self, message, **kwargs):
+        await self.send_json(message)
+

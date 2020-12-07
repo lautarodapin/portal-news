@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'tinymce',
     'crispy_forms',
     'bootstrap4',
+    'rest_framework',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
@@ -94,14 +95,23 @@ WSGI_APPLICATION = 'portal_news.wsgi.application'
 ASGI_APPLICATION = "portal_news.asgi.application"
 
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [config("REDIS_URL")],
+if AMBIENTE == 'PROD':
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [config("REDIS_URL")],
+            },
         },
-    },
-}
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
+
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
