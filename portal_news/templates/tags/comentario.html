@@ -1,0 +1,20 @@
+{% load humanize %}
+<div class="col-12 mb-2">
+    <div class="card">
+        <div class="card-header">
+            <p class="card-title">
+                {{ object.autor.username|lower|capfirst|default:"__username__" }}
+            </p>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                {{ object.cuerpo|safe|default:"__cuerpo__" }}
+            </p>
+        </div>
+        <div class="card-footer text-muted pt-0 pb-0">
+            <small class="card-text">
+                {{ object.created_at|naturaltime|default:"__created_at__" }}
+            </small>
+        </div>
+    </div>
+</div>

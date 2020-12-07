@@ -6,7 +6,7 @@
 
 
 <div class="card h-100">
-	<img src="..." class="card-img-top" alt="...">
+	{% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
 	<div class="card-body">
 		<h5 class="card-title">{{ object.titulo|lower|capfirst }}</h5>
 		<h6 class="card-subtitle">{{ object.subtitulo|lower|capfirst }}</h6>
@@ -33,10 +33,10 @@
 				{{ object.created_at|naturaltime }} por {{ object.autor }}
 			</p>
 			{% if object.created_at|date:"YmdHi" < object.mod_at|date:"YmdHi" %} {#  #}
-			<p class="card-text">
+			{% comment %} <p class="card-text">
 				Ultima edicion
 				{{ object.mod_at|naturaltime }} por {{ object.autor }}
-			</p>
+			</p> {% endcomment %}
 			{% endif %}
 		</small>
 	</div>

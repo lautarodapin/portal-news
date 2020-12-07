@@ -2,18 +2,19 @@
 {% load crispy_forms_tags %}
 
 {% block content %}   
-    <h3>Chat Room de {{ object.host }}</h3>
-
+    <div class="container">
+    <h3 class="m-5">Chat Room de {{ object.host }}</h3>
+    </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 col-lg-2 mb-2">
+            <div class="col-sm-12 col-lg-1 mb-2">
                 <ul class="list-group current-users">
                     {% for usuario in object.current_users.all %}
                         <li class="list-group-item">{{ usuario }}</li>
                     {% endfor %}
                 </ul>
             </div>
-            <div class="col-sm-12 col-lg-10">
+            <div class="col-sm-12 col-lg-11">
                 <div class="container">
                     <div class="container chat-container overflow-auto" style="max-height: 60vh;">
                         {% for message in history reversed %}

@@ -29,3 +29,7 @@ def cut_chars(string: str, amount=100) -> str:
 def get_request(context, parameter):
     request = context["request"]
     return request.GET.get(parameter, None)
+
+@register.inclusion_tag("tags/comentario.html")
+def comentario(obj):
+    return dict(object=obj)

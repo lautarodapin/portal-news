@@ -121,6 +121,28 @@
         </div>
     </main>
     <footer>
+        <script>
+        function stadisticalSocketCreate(){
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+            const stadisticalWS = new WebSocket(
+                ws_scheme
+                + '://'
+                + window.location.host
+                + '/ws/stadistical/'
+            );
+
+            stadisticalWS.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            };
+
+            stadisticalWS.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+                setTimeout(stadisticalSocketCreate, 1000*10)
+            };
+        }
+        stadisticalSocketCreate();
+        </script>
         {% block end_scripts %}
         {% endblock end_scripts %}
     </footer>

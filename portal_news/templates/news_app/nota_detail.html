@@ -37,29 +37,7 @@
     <h5>Comentarios</h5>
     <div class="row comentarios">
         {% for comentario in nota.comentarios.all %}
-        <div class="col-12 mb-2">
-            <div class="card">
-                <div class="card-body">
-                    {% if comentario.autor == request.user %}
-                    
-                    <div class="d-flex justify-content-end m-0 p-0">
-                        <img src="{% static 'admin/img/icon-changelink.svg' %}" alt="editar" title="Editar" data-id="{{comentario.id}}" id="comentario-{{comentario.id}}">
-                    </div>
-                    {% endif %}
-                    <p class="card-title">
-                        {{ comentario.autor.username|lower|capfirst }}
-                    </p>
-                    <p class="card-text" id="cuerpo-{{comentario.id}}">
-                        {{ comentario.cuerpo|safe }}
-                    </p>
-                </div>
-                <div class="card-footer text-muted pt-0 pb-0">
-                    <small class="card-text">
-                        {{ comentario.created_at|naturaltime }}
-                    </small>
-                </div>
-            </div>
-        </div>
+            {% comentario comentario %}
         {% empty %}
         No posee comentarios
         {% endfor %}
@@ -83,32 +61,16 @@
         </div>
     </div>
     {% else %}
-    para comentar debe <a href="{% url 'login' %}">logearse</a>
+    Para comentar debe <a href="{% url 'login' %}">logearse</a>
     {% endif %}
 </div>
 {% endblock content %}
 
 {% block end_scripts %}
 <script>
-    const comentario = `
-        <div class="col-12 mb-2">
-            <div class="card">
-                <div class="card-body">
-                    <p class="card-title">
-                        {{ comentario.autor.username|lower|capfirst }}
-                    </p>
-                    <p class="card-text">
-                        {{ comentario.cuerpo|safe }}
-                    </p>
-                </div>
-                <div class="card-footer text-muted pt-0 pb-0">
-                    <small class="card-text">
-                        {{ comentario.created_at|naturaltime }}
-                    </small>
-                </div>
-            </div>
-        </div>
-    `;
+    {% with object=None %} {# //? Para evitar que llene los comentairos #}
+    const comentario = `{% include 'tags/comentario.html' %}`;
+    {% endwith %}
     $(document).ready(function () {
         document.querySelectorAll("#cuerpo img").forEach(function (e) {
             $(e).width("100%");
@@ -155,6 +117,7 @@
                     $comentario.find('.card-title').text(resp.autor);
                     $comentario.find('.card-body .card-text').text(resp.cuerpo);
                     $comentario.find('.card-footer .card-text').text("hace un momento");
+                    $('#id_cuerpo').val("");
                 }
             });
             return false;
