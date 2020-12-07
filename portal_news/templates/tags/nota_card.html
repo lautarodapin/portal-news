@@ -9,7 +9,7 @@
 	{% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
 	<div class="card-body">
 		<h5 class="card-title">{{ object.titulo|lower|capfirst }}</h5>
-		<h6 class="card-subtitle">{{ object.subtitulo|lower|capfirst }}</h6>
+		<h6 class="card-subtitle">{{ object.subtitulo|default:""|lower|capfirst }}</h6>
 		{% comment %} <p class="card-text">{{ object.cuerpo|cut_chars:255|safe}}</p> {% endcomment %}
 		<p class="card-text">{{ object.cuerpo|striptags|truncatechars:255|safe }}</p>
 	</div>

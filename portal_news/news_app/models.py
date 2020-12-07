@@ -26,7 +26,7 @@ class Nota(AbstractDate):
     autor = models.ForeignKey(Usuario, verbose_name=_("Autor"), on_delete=models.CASCADE, related_name="notas")
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.created_at.strftime("%Y-%m-%d-") + str(self.titulo) + "-" + str(self.autor.username))
+        self.slug = slugify((self.created_at if self.created_at else now()).strftime("%Y-%m-%d-") + str(self.titulo) + "-" + str(self.autor.username))
         super().save(*args, **kwargs)
 
 

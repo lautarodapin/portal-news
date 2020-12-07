@@ -33,3 +33,8 @@ def get_request(context, parameter):
 @register.inclusion_tag("tags/comentario.html")
 def comentario(obj):
     return dict(object=obj)
+
+@register.inclusion_tag("tags/nota.html")
+def nota(obj):
+    return dict(object=obj)
+

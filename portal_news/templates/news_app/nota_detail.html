@@ -20,19 +20,7 @@
     </div>
 </div>
 <div class="container">
-    <small>
-        <p class="text-muted">
-            Autor: {{ nota.autor|lower }}
-        </p>
-    </small>
-    <div class="text-break" id="cuerpo">
-        {{ nota.cuerpo|safe }}
-    </div>
-    <small>
-        <p class="text-muted">
-            Creado {{ nota.created_at|naturaltime }}
-        </p>
-    </small>
+    {% nota object %}
     <hr>
     <h5>Comentarios</h5>
     <div class="row comentarios">
@@ -43,21 +31,9 @@
         {% endfor %}
     </div>
     {% if user.is_authenticated %}
-    
     <div class="row">
         <div class="col-12">
-            <form id="comment-form" action="{% url 'news_app:comentario-create' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" id="id_autor" name="autor" value="{{ request.user.pk }}">
-                <input type="hidden" id="id_nota" name="nota" value="{{ nota.pk }}">
-                <div class="form-group">
-                    <label for="id_cuerpo">Comentario</label>
-                    <textarea name="cuerpo" id="id_cuerpo" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Comentar" class="btn btn-sm btn-info">
-                </div>
-            </form>
+           {% include 'forms/comment_form.html' %}
         </div>
     </div>
     {% else %}

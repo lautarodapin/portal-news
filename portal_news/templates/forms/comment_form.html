@@ -1,0 +1,12 @@
+ <form id="comment-form" action="{% url 'news_app:comentario-create' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" id="id_autor" name="autor" value="{{ request.user.pk }}">
+    <input type="hidden" id="id_nota" name="nota" value="{{ nota.pk }}">
+    <div class="form-group">
+        <label for="id_cuerpo">Comentario</label>
+        <textarea name="cuerpo" id="id_cuerpo" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Comentar" class="btn btn-sm btn-info">
+    </div>
+</form>

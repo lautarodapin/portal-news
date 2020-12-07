@@ -1,0 +1,15 @@
+{% load humanize %}
+{% load static %}
+<small>
+    <p class="text-muted">
+        Autor: {{ object.autor|lower }}
+    </p>
+</small>
+<div class="text-break" id="cuerpo">
+    {{ object.cuerpo|safe }}
+</div>
+<small>
+    <p class="text-muted">
+        Creado {{ object.created_at|naturaltime }}
+    </p>
+</small>

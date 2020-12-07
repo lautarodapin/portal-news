@@ -11,6 +11,7 @@ from .forms import *
 
 class NotaListView(ListView):
     model = Nota
+    ordering = ["-created_at"]
 
 class NotaDetailView(DetailView):
     model = Nota
