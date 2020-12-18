@@ -59,12 +59,14 @@ export function Room({ws}) {
 		setTimeout(() => ws = new WebSocket(socketUrl), 1000 * 10);
 	};
 	return (
-		<div>
-
+		<div style={{overflow:"auto", maxHeight:"100 %"}}>
+			
 			{room?.map((item) => (
-				<Grid container spacing={1} alignItems="center" justify="center">
-					<Grid container xs={12} align="center">
-						<Paper style={{maxHeight: 200, overflow: 'auto'}}>
+				<Grid container direction="row" alignItems="center" justify="center" spacing={1}>
+
+				<Grid xs={10} spacing={1} alignItems="center" justify="center" direction="column">
+					<Grid item xs={12}>
+						<Paper style={{maxHeight:500, overflow: 'auto'}}>
 							<List >
 								{item.messages?.map((msj)=>
 									(<ListItem>
@@ -81,18 +83,21 @@ export function Room({ws}) {
 							</List>
 						</Paper>
 					</Grid>
-					<Grid container xs={12} align="center">
+				</Grid>
+				<Grid xs={2}>
+
+					<Grid item xs={12}>
 						<FormControl>
 							<TextField margin="dense" style={{ margin: 8 }} label="Mensaje" id="text" variant="standard" />
 						</FormControl>
 					</Grid>
-					<Grid container xs={12} align="center">
+					<Grid item xs={12}>
 						<ChatUsers data={users}></ChatUsers>
 					</Grid>
 				</Grid>
+				</Grid>
 			))}
 		</div>
-	)
-		;
+	);
 }
 export default Room;
