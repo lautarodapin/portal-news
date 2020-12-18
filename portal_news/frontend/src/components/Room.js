@@ -1,35 +1,31 @@
-import React, { Component, useEffect, useState } from "react";
-import { GridList, GridListTile,
+import React, { Component, useEffect, useState, useRef } from "react";
+import { GridList, GridListTile, List, ListItem, Paper, Card, CardContent, 
 	Grid, Button, ButtonGroup, Typography, TextField, FormControl } from "@material-ui/core";
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-	Link,
-	Redirect,
-	useParams,
+import {BrowserRouter as Router,Switch,Route,Link,Redirect,useParams,
 } from "react-router-dom";
 import Chat from './Chat.js';
 import ChatUsers from './ChatUsers.js';
 
+const AlwaysScrollToBottom = () => {
+	const elementRef = useRef();
+	useEffect(() => elementRef.current.scrollIntoView());
+	return <div ref={elementRef} />;
+  };
+  
 
 export function Room({ws}) {
 	let params = useParams(); // params.room
-	const [data, setData] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [messages, setMessages] = useState(new Array());
 	const [users, setUsers] = useState(null);
+
+
 	const getRoom = () => fetch(`http://${host}/api/rooms/?code=${params.room}`)
 		.then((data) => data.json());
 
 	useEffect(() => {
 		getRoom().then((data) => {
-			setRoom(room => data);
-			var _ = []
-			data[0].messages.forEach((e)=>_.push(e));
-			console.log("_", _);
-			setMessages(messages=>_);
-			console.log("messages", messages);
+			setRoom(data);
 		});
 	}, []);
 	ws.onmessage = function (e) {
@@ -42,8 +38,9 @@ export function Room({ws}) {
 			setUsers(data.usuarios);
 		}
 		if (data.action === "create" && data.type==="message.activity"){
-			// messages.push(data)
-			// setMessages(messages)
+			var temp = room[0].messages;
+			temp.push(data)
+			setMessages(temp)
 		}
 	}
 	ws.onopen = function () {
@@ -73,8 +70,22 @@ export function Room({ws}) {
 			{room?.map((item) => (
 				<Grid container spacing={1} alignItems="center" justify="center">
 					<Grid container xs={12} align="center">
-
-						<Chat data={item}></Chat>
+						<Paper style={{maxHeight: 200, overflow: 'auto'}}>
+							<List >
+								{item.messages?.map((msj)=>
+									(<ListItem>
+										<Card variant="outlined" className="mb-5" id={msj.id}>
+											<CardContent>
+												<Typography>
+													{msj.created_at_formatted} {msj.user.username}: {msj.text}
+												</Typography>
+											</CardContent>
+										</Card>
+									</ListItem>)
+								)}
+								<AlwaysScrollToBottom/>
+							</List>
+						</Paper>
 					</Grid>
 					<Grid container xs={12} align="center">
 						<FormControl>

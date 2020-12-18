@@ -14,11 +14,12 @@ import {
 */
 function Chat({data}) { // se puede usar props sin llaves tmb
 	const params = useParams(); // contiene los parametros del url
-	console.log(data);
+	const [messages, setMessages] = useState(data?.messages);
+	console.log("Chat js", messages);
 	return (
 		<Paper style={{maxHeight: 200, overflow: 'auto'}}>
 			<List >
-			{data?.messages.map((msj)=>
+			{messages?.map((msj)=>
 				(
 					<ListItem>
 					<Card variant="outlined" className="mb-5" id={msj.id}>
