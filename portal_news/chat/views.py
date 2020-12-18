@@ -26,12 +26,15 @@ class RoomDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        obj:Room = context["object"]
+        # if not obj.current_users.filter(pk=self.request.user.pk).exists():
+        #     obj.current_users.add(self.request.user)
         context["message_form"] = MessageForm
         # print(self.request.session.session_key)
         context["history"] = self.object.messages.all().order_by('-created_at')[:100]
         return context
     
-
+    
 
 @method_decorator(login_required, name='dispatch')
 class RoomCreateView(SuccessMessageMixin, CreateView):

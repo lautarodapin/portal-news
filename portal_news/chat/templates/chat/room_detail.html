@@ -26,8 +26,10 @@
                         </div>
                         {% endfor %}
                     </div>
-                    {{ message_form.text|as_crispy_field }}
-                    <input id="chat-message-submit" type="button" value="Enviar" class="btn btn-info">
+                    <div class="container mt-3">
+                        {{ message_form.text|as_crispy_field }}
+                        <input id="chat-message-submit" type="button" value="Enviar" class="btn btn-info">
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,20 +48,27 @@
         </div>
         `;
         const roomCode = "{{ view.kwargs.slug }}";
-        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        const roomID = "{{ object.pk }}";
 
         function createSocket(){
-            const chatSocket = new WebSocket(
-                ws_scheme
-                + '://'
-                + window.location.host
-                + '/ws/chat/'
-                + roomCode
-                + '/'
-            );
+            const ws = new WebSocket(`${window.ws_scheme}://${window.host}/ws/messages/`);
 
-            chatSocket.onmessage = function(e) {
+            ws.onmessage = function(e) {
                 const data = JSON.parse(e.data);
+                if(data.action === "create" && data.type === "message.activity"){ // nuevo mensaje
+                    $('.chat-container').append(
+                        card.replace(/{}/, 
+                        `${data.created_at_formatted} ${data.user.username}: ${data.text}`)
+                    );
+                    $(".chat-container").scrollTop($(".chat-container")[0].scrollHeight);
+
+                } else if (data.action == "update"){ // room actualizado
+                    var usuarios = "";
+                    data.data.current_users.forEach(function(e){
+                        usuarios += `<li class="list-group-item">${e.username}</li>`;
+                    });
+                    $('.current-users').html(usuarios);
+                }
                 if ("usuarios" in data){
                     var usuarios = "";
                     data.usuarios.forEach(function(e){
@@ -72,11 +81,28 @@
                 }
             };
 
-            chatSocket.onclose = function(e) {
+            ws.onclose = function(e) {
                 console.error('Chat socket closed unexpectedly');
                 setTimeout(createSocket, 1000*10)
             };
 
+            ws.onopen = function(){
+                ws.send(JSON.stringify({
+                    action:"subscribe_instance",
+                    pk:roomID,
+                    request_id:window.session_key,
+                }));
+                ws.send(JSON.stringify({
+                    action:"subscribe_to_messages_in_room",
+                    pk:roomID,
+                    request_id:window.session_key,
+                }));
+                ws.send(JSON.stringify({
+                    action:"join_room",
+                    pk:roomID,
+                    request_id:window.session_key,
+                }));
+            }
             document.querySelector('#id_text').focus();
             document.querySelector('#id_text').onkeyup = function(e) {
                 if (e.keyCode === 13) {  // enter, return
@@ -87,12 +113,17 @@
             document.querySelector('#chat-message-submit').onclick = function(e) {
                 const messageInputDom = document.querySelector('#id_text');
                 const message = messageInputDom.value;
-                chatSocket.send(JSON.stringify({
-                    'message': message
+                ws.send(JSON.stringify({
+                    action:'create_message',
+                    message: message,
+                    request_id:window.session_key,
                 }));
                 messageInputDom.value = '';
             };
         }
-        createSocket();
+
+        $(document).ready(function(){
+            createSocket();
+        });
     </script>
 {% endblock end_scripts %}

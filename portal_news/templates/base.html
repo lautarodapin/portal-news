@@ -17,6 +17,14 @@
     {# Google AdSense #}
     <script data-ad-client="ca-pub-4173550974749865" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <title>{{ title|default:"Lengua liberal" }}</title>
+
+    <script>
+    window.ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    window.host = window.location.host;
+    window.session_key = "{{request.session.session_key}}";
+    </script>
+
+
     {% block extra_head %}
     {% endblock extra_head %}
 </head>

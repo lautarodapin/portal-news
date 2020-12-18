@@ -14,16 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from graphene_django.views import GraphQLView
 from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
 
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('tiny-mce/', include('tinymce.urls')),
     path('ads/', include('ads.urls')),
 
     path('', include('news_app.urls')),
     path('chat/', include('chat.urls')),
     path('accounts/', include('login.urls')),
+
+    path('frontend/', include('frontend.urls')),
+    path('api/', include('api.urls')),
+
 ]

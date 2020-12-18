@@ -51,6 +51,11 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'rest_framework',
+    'graphene_django',
+    'frontend.apps.FrontendConfig',
+    'api.apps.ApiConfig',
+    'corsheaders',
+
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
@@ -59,12 +64,14 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'portal_news.middleware.RequireLoginMiddleware',
+
 ]
 
 ROOT_URLCONF = 'portal_news.urls'
@@ -93,7 +100,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'portal_news.wsgi.application'
 ASGI_APPLICATION = "portal_news.asgi.application"
-
 
 if AMBIENTE == 'PROD':
     CHANNEL_LAYERS = {
@@ -254,3 +260,19 @@ INSTALLED_APPS += ('portal_news', 'django_celery_beat',)
 # EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 # MAILGUN_ACCESS_KEY = config("MAILGUN_ACCESS_KEY")
 # MAILGUN_SERVER_NAME = 'https://api.mailgun.net/v3/sandbox06c86d2720174571847ca3f6c3fe1ff6.mailgun.org?'
+
+
+# GRAPHNE
+GRAPHENE = {
+    "SCHEMA": "api.schema.schema",
+    "MIDDLEWARE":[
+    ],
+}
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+# APPEND_SLASH = False
