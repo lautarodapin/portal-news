@@ -32,11 +32,10 @@ export default class HomePage extends Component {
           />
           <Route exact path="/frontend/rooms/">
 			  <RoomList/>
-		  </Route>
+		  </Route>	
           <Route exact path="/frontend/rooms/:room/">
 			  <Room/>
-		  </Route>
-
+		  </Route>	
         </Switch>
       </Router>
     );

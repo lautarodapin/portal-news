@@ -8,6 +8,13 @@ class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        code = self.request.GET.get("code")
+        if code:
+            queryset = queryset.filter(code=code)
+        return queryset
+
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer

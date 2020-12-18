@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
 import {
   BrowserRouter as Router,
@@ -8,27 +8,32 @@ import {
   Redirect,
   useParams,
 } from "react-router-dom";
-import { useQuery } from 'react-apollo';
-import { gql } from 'apollo-boost';
+import Chat from './Chat.js';
+import ChatUsers from './ChatUsers.js';
 
-const QUERY_ROOMS = gql`
-	query	{
-		listRooms {
-			slug
-			nombre
-			host	{
-				username
-			}
-		}
-	}
-  `;
 
 export function Room() {
-	let params = useParams();
+	let params = useParams(); // params.room
+	const [room, setRoom] = useState(null);
+	const getRoom = ()=>fetch(`http://${host}/api/rooms/?code=${params.room}`)
+		.then((data)=>data.json());
+
+	useEffect(()=>{
+		getRoom().then((data)=>setRoom(data));
+	}, []);
 
     return (
       <div>
-		  {params.room}
+		  
+		  {room?.map((item)=>(
+			  <div>
+				<div>
+					{item.code}
+				</div>
+				<ChatUsers data={item}></ChatUsers>
+				<Chat data={item}></Chat>  
+			  </div>
+		  ))}
       </div>
       )
     ;

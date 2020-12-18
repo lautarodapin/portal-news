@@ -6,7 +6,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        exclude = []
+        exclude = ["password",]
         depth = 1
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -20,10 +20,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     last_message = serializers.SerializerMethodField()
+    messages = MessageSerializer(many=True)
     class Meta:
         model = Room
         fields = ["code", "nombre", "host", "slug", "messages", "current_users", "last_message"]
-        depth = 1
+        depth = 2
+        read_only_fields = ["code", "slug",]
         
     def get_last_message(self, obj:Room):
         return MessageSerializer(obj.messages.order_by('created_at').last()).data

@@ -19,6 +19,7 @@
 		window.username = "{{request.user.username}}";
 		window.username_id = "{{request.user.pk}}";
 		window.is_staff = {{request.user.is_staff|yesno:"true,false"}};
+    window.token = `{% csrf_token %}`;
     </script>
   </head>
   <body>
