@@ -27,15 +27,15 @@ export default class HomePage extends Component {
             render={() => {
               return (
                 <p>Home page</p>
-                );
+              );
             }}
           />
           <Route exact path="/frontend/rooms/">
-			  <RoomList/>
-		  </Route>	
+            <RoomList />
+          </Route>
           <Route exact path="/frontend/rooms/:room/">
-			  <Room/>
-		  </Route>	
+            <Room ws={new WebSocket(`ws://${host}/ws/messages/`)}></Room>
+          </Route>
         </Switch>
       </Router>
     );

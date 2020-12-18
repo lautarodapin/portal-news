@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect} from "react";
-import { Grid, Paper,Button, ButtonGroup, Typography, Card, CardHeader, CardContent, Divider } from "@material-ui/core";
+import { GridList, GridListTile, List,ListItem,
+	Grid, Paper,Button, ButtonGroup, Typography, Card, CardHeader, CardContent, Divider } from "@material-ui/core";
 import {
   BrowserRouter as Router,
   Switch,
@@ -15,9 +16,11 @@ function Chat({data}) { // se puede usar props sin llaves tmb
 	const params = useParams(); // contiene los parametros del url
 	console.log(data);
 	return (
-		<Paper>
+		<Paper style={{maxHeight: 200, overflow: 'auto'}}>
+			<List >
 			{data?.messages.map((msj)=>
-				(<div>
+				(
+					<ListItem>
 					<Card variant="outlined" className="mb-5" id={msj.id}>
 						<CardContent>
 							<Typography>
@@ -25,8 +28,10 @@ function Chat({data}) { // se puede usar props sin llaves tmb
 							</Typography>
 						</CardContent>
 					</Card>
-				</div>)
-			)}
+						</ListItem>
+				)
+				)}
+				</List>
 		</Paper>
 	);
 }

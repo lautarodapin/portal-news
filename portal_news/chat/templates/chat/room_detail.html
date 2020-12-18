@@ -72,7 +72,7 @@
                 if ("usuarios" in data){
                     var usuarios = "";
                     data.usuarios.forEach(function(e){
-                        usuarios += `<li class="list-group-item">${e}</li>`;
+                        usuarios += `<li class="list-group-item">${e.username}</li>`;
                     });
                     $('.current-users').html(usuarios);
                 } else if ("message" in data){

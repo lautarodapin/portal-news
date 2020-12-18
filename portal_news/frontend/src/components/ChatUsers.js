@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect} from "react";
-import { Grid, Paper,Button, ButtonGroup, Typography, Card, CardHeader, CardContent, Divider } from "@material-ui/core";
+import {List, ListItem, 
+    Grid, Paper,Button, ButtonGroup, Typography, Card, CardHeader, CardContent, Divider } from "@material-ui/core";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,13 +12,15 @@ import {
 /*
 *
 */
-function Chat({data}) { // se puede usar props sin llaves tmb
+function ChatUsers({data}) { // se puede usar props sin llaves tmb
 	const params = useParams(); // contiene los parametros del url
-	console.log(data);
+	console.log("Chat users", data);
 	return (
-		<Paper>
-			{data?.current_users?.map((user)=>
-				(<div>
+		<Paper style={{maxHeight: 200, overflow: 'auto'}}>
+			<List>
+			{data?.map((user)=>
+				(
+					<ListItem>
 					<Card variant="outlined" className="mb-5" id={user.id}>
 						<CardContent>
 							<Typography>
@@ -25,9 +28,11 @@ function Chat({data}) { // se puede usar props sin llaves tmb
 							</Typography>
 						</CardContent>
 					</Card>
-				</div>)
+						</ListItem>
+				)
 			)}
+				</List>
 		</Paper>
 	);
 }
-export default Chat;
+export default ChatUsers;

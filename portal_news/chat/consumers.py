@@ -127,6 +127,7 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
 
     @action()
     async def join_room(self, pk, **kwargs):
+        self.room_subscribe = pk
         await self.add_user_to_room(pk)
         await self.notify_users()
 
@@ -184,7 +185,7 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
 
     @database_sync_to_async
     def current_users(self, room:Room):
-        return [usuario.username for usuario in room.current_users.all()]
+        return [UserSerializer(usuario).data for usuario in room.current_users.all()]
 
     @database_sync_to_async
     def remove_user_from_room(self, room):
