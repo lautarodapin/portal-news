@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { GridList, GridListTile, List, ListItem, Paper, Card, CardContent, 
 	Grid, Button, ButtonGroup, Typography, TextField, FormControl } from "@material-ui/core";
 import {BrowserRouter as Router,Switch,Route,Link,Redirect,useParams,
@@ -12,7 +12,8 @@ export function Room({ws}) {
 	const [room, setRoom] = useState(null);
 	const [messages, setMessages] = useState(new Array());
 	const [users, setUsers] = useState(null);
-
+	const [messageText, setMessageText] = useState(null);
+	const updateMessageText = (e)=>setMessageText(e.target.value)
 
 	const getRoom = () => fetch(`http://${host}/api/rooms/?code=${params.room}`)
 		.then((data) => data.json());
@@ -22,6 +23,23 @@ export function Room({ws}) {
 			setRoom(data);
 		});
 	}, []);
+
+	useEffect(()=>{
+		const listener = event=>event.code==="Enter"?submitMessage():null;
+		document.addEventListener("keydown", listener);
+		return ()=>document.removeEventListener("keydown", listener)
+	}, []);
+
+	const submitMessage = ()=>{
+		console.log("Message Submited");
+		console.log(messageText);
+		ws.send(JSON.stringify({
+			action:"create_message",
+			message:messageText,
+			request_id:session_key,
+		}));
+	};
+
 	ws.onmessage = function (e) {
 		const data = JSON.parse(e.data);
 		console.log(data);
@@ -56,7 +74,7 @@ export function Room({ws}) {
 	}
 	ws.onclose = function (e) {
 		console.error('Chat socket closed unexpectedly');
-		setTimeout(() => ws = new WebSocket(socketUrl), 1000 * 10);
+		setTimeout(() => ws = new WebSocket(`ws://${host}/ws/messages/`), 1000 * 10);
 	};
 	return (
 		<div style={{overflow:"auto", maxHeight:"100 %"}}>
@@ -88,7 +106,13 @@ export function Room({ws}) {
 
 					<Grid item xs={12}>
 						<FormControl>
-							<TextField margin="dense" style={{ margin: 8 }} label="Mensaje" id="text" variant="standard" />
+							<ButtonGroup>
+								<TextField margin="dense" style={{ margin: 8 }} label="Mensaje" id="text" variant="standard" 
+								value={messageText}
+								onChange={updateMessageText}
+								/>
+								<Button onClick={submitMessage} title="Enviar"/>
+							</ButtonGroup>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>

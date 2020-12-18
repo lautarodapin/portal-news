@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'rest_framework',
+    'rest_framework.authtoken',
     'graphene_django',
     'frontend.apps.FrontendConfig',
     'api.apps.ApiConfig',
@@ -58,6 +59,12 @@ INSTALLED_APPS = [
 
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

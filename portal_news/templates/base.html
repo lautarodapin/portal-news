@@ -19,9 +19,13 @@
     <title>{{ title|default:"Lengua liberal" }}</title>
 
     <script>
-    window.ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    window.host = window.location.host;
-    window.session_key = "{{request.session.session_key}}";
+        window.ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        window.host = window.location.host;
+        window.session_key = "{{request.session.session_key}}";
+        window.username = "{{request.user.username}}";
+        window.username_id = "{{request.user.pk}}";
+        window.is_staff = {{request.user.is_staff|yesno:"true,false"}};
+        window.token = `{% csrf_token %}`;
     </script>
 
 
@@ -33,90 +37,11 @@
 
     <head>
 
-        <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            {% url 'news_app:nota-list' as link %}
-            <a class="navbar-brand {% is_active link %} ml-2" href="{{ link }}">
-                LOGO
-            </a>
-            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-                <ul class="navbar-nav mr-auto">
+        {% include 'nav.html' %}
+        {% include 'breadcrumb.html' %}
 
-                    <li class="nav-item">
-                        {% url 'news_app:nota-list' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
-                            Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        {% url 'news_app:nota-create' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
-                            Crear nota
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        {% url 'chat:room-list' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
-                            Chat Rooms
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto">
-                    {{ title|upper|default:"Lengua liberal" }}
-                </a>
-            </div>
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <ul class="navbar-nav ml-auto">
-                    {% if user.is_authenticated %}
-                    {% if user.is_superuser or user.is_staff %}
-                    <li class="nav-item">
-                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'admin:index' %}">
-                            Admin
-                        </a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="flex-sm-fill text-sm-center nav-link disabled" href="#">
-                            {{ request.user|capfirst }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'logout' %}?next={{ request.get_full_path }}">
-                            Cerrar sesion
-                        </a>
-                    </li>
-                    {% else %}
-                    {% url 'login' as login %}
-                    <li class="nav-item">
-                        <a class="flex-sm-fill text-sm-center nav-link {% is_active login %}" href="{{ login }}">
-                            Login
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                {% block breadcrumb %}
-                {% endblock breadcrumb %}
-            </ol>
-        </nav>
-        {% if messages %}
-        {% for m in messages %}
-        <div class="alert alert-{% if m.tags %}{{ m.tags }}{% endif %}">
-            <li>
-                {{ m|safe }}
-            </li>
-        </div>
-        {% endfor %}
-        {% endif %}
+        
+        {% include 'messages.html' %}
     </head>
     <main>
         <div class="main">
