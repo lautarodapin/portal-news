@@ -12,6 +12,14 @@
     />
     <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"
     />
+	<script>
+		window.ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		window.host = window.location.host;
+		window.session_key = "{{request.session.session_key}}";
+		window.username = "{{request.user.username}}";
+		window.username_id = "{{request.user.pk}}";
+		window.is_staff = {{request.user.is_staff|yesno:"true,false"}};
+    </script>
   </head>
   <body>
     <div id="main">

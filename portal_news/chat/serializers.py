@@ -24,6 +24,6 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ["code", "nombre", "host", "slug", "messages", "current_users", "last_message"]
         depth = 1
+        
     def get_last_message(self, obj:Room):
-
         return MessageSerializer(obj.messages.order_by('created_at').last()).data
