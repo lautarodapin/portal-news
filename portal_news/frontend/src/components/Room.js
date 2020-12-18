@@ -1,17 +1,11 @@
-import React, { Component, useEffect, useState, useRef } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { GridList, GridListTile, List, ListItem, Paper, Card, CardContent, 
 	Grid, Button, ButtonGroup, Typography, TextField, FormControl } from "@material-ui/core";
 import {BrowserRouter as Router,Switch,Route,Link,Redirect,useParams,
 } from "react-router-dom";
 import Chat from './Chat.js';
 import ChatUsers from './ChatUsers.js';
-
-const AlwaysScrollToBottom = () => {
-	const elementRef = useRef();
-	useEffect(() => elementRef.current.scrollIntoView());
-	return <div ref={elementRef} />;
-  };
-  
+import { AlwaysScrollToBottom } from "./utils/AlwaysScrollToBottom";
 
 export function Room({ws}) {
 	let params = useParams(); // params.room
