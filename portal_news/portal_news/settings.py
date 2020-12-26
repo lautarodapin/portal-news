@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'frontend.apps.FrontendConfig',
     'api.apps.ApiConfig',
     'corsheaders',
+    'cloudinary', # ? Servicio de imagenes en la nube 
 
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -283,3 +284,11 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
 ]
 # APPEND_SLASH = False
+
+# Cloudinary
+import cloudinary
+cloudinary.config( 
+  cloud_name = config("CLOUDINARY_NAME"), 
+  api_key = config("CLOUDINARY_API_KEY", "874837483274837"), 
+  api_secret = config("CLOUDINARY_SECRET_KEY", "a676b67565c6767a6767d6767f676fe1"), 
+)

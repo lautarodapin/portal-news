@@ -107,7 +107,7 @@ class UsuarioConsumerObserver(GenericAsyncAPIConsumer):
     queryset = Usuario.objects.all()
     serializer_class = UserSerializer
     async def accept(self, **kwargs):
-        await super().accept(** kwargs)
+        await super().accept(**kwargs)
         await self.model_change.subscribe()
 
 
@@ -120,9 +120,13 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
+    # async def accept(self, **kwargs):
+    #     await super().accept(**kwargs)
+
     async def disconnect(self, code):
-        await self.remove_user_from_room(self.room_subscribe)
-        await self.notify_users()
+        if hasattr(self, "room_subscribe"):
+            await self.remove_user_from_room(self.room_subscribe)
+            await self.notify_users()
         await super().disconnect(code)
 
     @action()

@@ -13,4 +13,7 @@ urlpatterns = [
     path('comentario/crear/', ComentarioCreateView.as_view(), name="comentario-create"),
     path('comentario/<int:pk>/editar/', ComentarioUpdateView.as_view(), name="comentario-update"),
     path('comentario/<int:pk>/delete/', ComentarioDeleteView.as_view(), name="comentario-delete"),
+
+    path('imagen/', ImagenListView.as_view(), name="imagen-list"),
+    path('imagen/crear/', ImagenCreateView.as_view(), name="imagen-create"),
 ]

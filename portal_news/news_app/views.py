@@ -8,6 +8,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
 from .forms import *
 
+class ImagenListView(ListView):
+    model = Imagen
+
+class ImagenCreateView(CreateView):
+    model = Imagen
+    form_class = ImagenForm
+
 
 class NotaListView(ListView):
     model = Nota

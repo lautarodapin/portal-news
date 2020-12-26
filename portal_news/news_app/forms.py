@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.layout import Fieldset, Layout, Column, Row, Submit, ButtonHolder
 from crispy_forms.helper import FormHelper
-
+from cloudinary.forms import (CloudinaryJsFileField, CloudinaryFileField,)
 from .models import *
 class NotaForm(forms.ModelForm):
     class Meta:
@@ -45,3 +45,10 @@ class ComentarioForm(forms.ModelForm):
                 ButtonHolder(Submit("submit", "Guardar", css_class="btn btn-lg btn-success")),
             )
         )
+
+
+class ImagenForm(forms.ModelForm):
+    imagen = CloudinaryFileField()
+    class Meta:
+        model = Imagen
+        fields = ['imagen']

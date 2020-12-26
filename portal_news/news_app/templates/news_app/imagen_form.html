@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load cloudinary %}
+{% block extra_head %}
+{% cloudinary_includes %}
+{% cloudinary_js_config %}
+{% endblock extra_head %}
+
+{% block container %}
+<form enctype="multipart/form-data" method="POST" action="{% url 'news_app:imagen-create' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Submit">
+</form>
+{% endblock container %}

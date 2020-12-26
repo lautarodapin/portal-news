@@ -29,6 +29,7 @@
 		window.session_key = "{{request.session.session_key}}";
 		window.username = "{{request.user.username}}";
 		window.username_id = "{{request.user.pk}}";
+    window.is_authenticated = {{request.user.is_authenticated|yesno:"true,false"}};
 		window.is_staff = {{request.user.is_staff|yesno:"true,false"}};
     window.token = `{% csrf_token %}`;
     </script>
@@ -36,6 +37,7 @@
   <body>
     <header>{% include 'nav.html' %}</header>
 
+  
     <div id="main">
       <div id="app"></div>
     </div>

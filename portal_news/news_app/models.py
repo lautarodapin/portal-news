@@ -5,7 +5,8 @@ from django.utils.timezone import now
 from django.utils.translation import gettext as _
 
 from tinymce.models import HTMLField
-
+import cloudinary
+from cloudinary.models import CloudinaryField
 class AbstractDate(models.Model):
     class Meta:
         abstract = True
@@ -34,4 +35,14 @@ class Comentario(AbstractDate):
     cuerpo = HTMLField()
     nota = models.ForeignKey(Nota, verbose_name=_("Nota"), on_delete=models.CASCADE, related_name="comentarios")
     autor = models.ForeignKey(Usuario, verbose_name=_("Autor"), on_delete=models.CASCADE, related_name="comentarios")
+    
+
+class Imagen(AbstractDate):
+    class Meta:
+        abstract = False
+    imagen: CloudinaryField = CloudinaryField('image')
+
+    def delete(self, *args, **kwargs):
+        cloudinary.uploader.destroy(self.imagen.public_id, invalidate=True)
+        return super().delete(*args, **kwargs)
     

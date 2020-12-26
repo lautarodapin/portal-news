@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Usuario, Nota, Comentario
+from .models import Usuario, Nota, Comentario, Imagen
 
 
 @admin.register(Usuario)
@@ -48,3 +48,9 @@ class NotaAdmin(admin.ModelAdmin):
 class ComentarioAdmin(admin.ModelAdmin):
     list_display = ('id', 'cuerpo', 'nota', 'autor')
     list_filter = ('nota', 'autor')
+
+
+@admin.register(Imagen)
+class ImagenAdmin(admin.ModelAdmin):
+    list_display = ('id', 'imagen')
+    

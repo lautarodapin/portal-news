@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     created_at_formatted = serializers.SerializerMethodField()
+    user = UserSerializer()
     class Meta:
         model = Message
         exclude = []
@@ -20,12 +21,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     last_message = serializers.SerializerMethodField()
-    messages = MessageSerializer(many=True)
+    messages = MessageSerializer(many=True, read_only=True)
     class Meta:
         model = Room
         fields = ["code", "nombre", "host", "slug", "messages", "current_users", "last_message"]
-        depth = 2
-        read_only_fields = ["code", "slug",]
+        depth = 1
+        read_only_fields = ["code", "slug", "messages", "last_message"]
         
     def get_last_message(self, obj:Room):
         return MessageSerializer(obj.messages.order_by('created_at').last()).data
