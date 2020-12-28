@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import RoomList from "./RoomList";
 import Room from "./Room";
+import NotaPage from "./NotaPage";
 
 export default class HomePage extends Component {
   constructor(props) {
@@ -34,7 +35,10 @@ export default class HomePage extends Component {
             <RoomList />
           </Route>
           <Route exact path="/frontend/rooms/:room/">
-            <Room ws={new WebSocket(`ws://${host}/ws/messages/`)}></Room>
+            <Room></Room>
+          </Route>
+          <Route exact path="/frontend/notas/">
+            <NotaPage/>
           </Route>
         </Switch>
       </Router>

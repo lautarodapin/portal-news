@@ -42,7 +42,7 @@ class Imagen(AbstractDate):
         abstract = False
     imagen: CloudinaryField = CloudinaryField('image')
 
-    def delete(self, *args, **kwargs):
-        cloudinary.uploader.destroy(self.imagen.public_id, invalidate=True)
-        return super().delete(*args, **kwargs)
+    # def delete(self, *args, **kwargs):
+    #     cloudinary.uploader.destroy(self.imagen.public_id)
+    #     return super().delete(*args, **kwargs)
     

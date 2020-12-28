@@ -33,6 +33,9 @@ ALLOWED_HOSTS = ["*",]
 # Application definition
 AUTH_USER_MODEL = 'news_app.Usuario'
 
+# Flatpage
+SITE_ID = 1
+
 INSTALLED_APPS = [
     'channels',
     'django.contrib.admin',
@@ -42,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    
+    # 'django.contrib.sites',
+    # 'django.contrib'
+
     'news_app.apps.NewsAppConfig',
     'chat.apps.ChatConfig',
     'login.apps.LoginAppConfig',

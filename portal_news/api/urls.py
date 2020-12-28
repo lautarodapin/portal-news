@@ -5,9 +5,11 @@ from .views import *
 app_name = 'api'
 
 router = DefaultRouter()
-router.register(r'rooms', RoomViewSet, basename='room'),
-router.register(r'messages', MessageViewSet, basename='message'),
-router.register(r'users', UsuarioViewSet, basename='user'),
+router.register(r'rooms', RoomViewSet, basename='room')
+router.register(r'messages', MessageViewSet, basename='message')
+router.register(r'users', UsuarioViewSet, basename='user')
+router.register(r'imagen', ImagenViewSet, basename="imagen")
+
 
 urlpatterns = [
     path('', include(router.urls)),

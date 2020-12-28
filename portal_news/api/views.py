@@ -1,8 +1,9 @@
 from rest_framework import status, viewsets
 from chat.models import (Message, Room,)
-from news_app.models import (Usuario)
+from news_app.models import (Usuario, Imagen)
 from django.conf import settings
 from chat.serializers import (MessageSerializer, RoomSerializer, UserSerializer)
+from news_app.serializers import (ImagenSerializer)
 from typing import List
 class MixinFilter:
     filter_kwargs : List[str]= []
@@ -46,3 +47,7 @@ class UsuarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UserSerializer
 
+
+class ImagenViewSet(MixinFilter, viewsets.ModelViewSet):
+    queryset = Imagen.objects.all()
+    serializer_class = ImagenSerializer

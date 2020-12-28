@@ -24,7 +24,7 @@ class RoomSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
     class Meta:
         model = Room
-        fields = ["code", "nombre", "host", "slug", "messages", "current_users", "last_message"]
+        fields = ["pk", "code", "nombre", "host", "slug", "messages", "current_users", "last_message"]
         depth = 1
         read_only_fields = ["code", "slug", "messages", "last_message"]
         
