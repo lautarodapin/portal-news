@@ -15,9 +15,6 @@ import 'react-quill/dist/quill.snow.css';
 
 export function NotaPage() {
     let params = useParams();
-    const [imagen, setImagen] = useState(null)
-    const [imagenes, setImagenes] = useState(null);
-    const [value, setValue] = useState('');
     var editor = useRef(null);
     var editorRef = useRef(null);
     const formats = [
@@ -35,53 +32,52 @@ export function NotaPage() {
           ['clean']
         ],
     };
-    useEffect(() => getImagenes(), []);
-    // useEffect(()=>{
-    //     editorRef = editor.current.getEditor();
-    //     console.log(editorRef)
-    // }, []);
-    const uploadFile = (e) => {
-        setImagen(e.target.files[0])
-        const formData = new FormData()
-        formData.append("imagen", e.target.files[0])
-        fetch(`/api/imagen/`, {
-            method: "POST",
-            body: formData,
-        }).then(r => r.json()).then(data => console.log(data)) // {imagen:"url"}
-        setImagen(null);
-
-    }
-    const getImagenes = () => fetch('/api/imagen/').then(r => r.json()).then(data => setImagenes(data));
-
-    const submitEditor = ()=>{
-        var html = editorRef.getHTML()
-        fetch("/api/test/", {
-            method:"post", 
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': $(token).val(), },
-            body:JSON.stringify({
-                html:html,
-            })
-        })
-
-    };
-    const editorChange = (e)=>{
-        setValue(e)
-        const parser = new DOMParser()
-        const doc = parser.parseFromString(e, 'text/html')
-        var img = doc.querySelector("img")
-        console.log(img.getAttribute("src"))
-        
-    };
+    const scrollingContainer = {}
+    const [titulo, setTitulo] = useState(null)
+    const [subtitulo, setSubtitulo] = useState(null)
+    const [cuerpo, setCuerpo] = useState('');
+    const editorChange = (e)=>setCuerpo(e);
+    const uploadNota = ()=>fetch(`/api/nota/`, {
+        method:"POST",
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': $(token).val(), },
+        body:JSON.stringify({
+            titulo:titulo,
+            subtitulo:subtitulo,
+            cuerpo:cuerpo,
+            autor:window.username_id,
+        }),
+    }).then(r=>r.json()).then(data=>console.log(data));
     return (
         <div>
-            <input type="file" value={imagen} onChange={(e) => uploadFile(e)} />
-            {imagenes?.map(imagen => (
-                <img src={imagen.imagen} alt="" />
-            ))}
-
-            <div id="markdown">
-            <ReactQuill ref={(ele)=>{if(ele){editor=ele.getEditor(); editorRef=ele.makeUnprivilegedEditor(ele.getEditor())}}} theme="snow" value={value} onChange={(e) => editorChange(e)} formats={formats} modules={modules} />
-            <button onClick={submitEditor}>AASD</button>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><Link to={`/frontend/notas/`}>Notas</Link></li>
+					<li class="breadcrumb-item active" aria-current="page">Nueva nota</li>
+				</ol>
+			</nav>
+            <div className="container">
+                <h2>Crear una nueva nota</h2>
+                <div className="row mb-3">
+                    <div className="col">
+                        <label htmlFor="">
+                            Titulo
+                        </label>
+                            <input type="text" value={titulo} onChange={(e)=>setTitulo(e.target.value)} className="form-control form-control-lg"/>
+                    </div>
+                    <div className="col">
+                        <label htmlFor="">
+                            Subtitulo
+                        </label>
+                            <input type="text" value={subtitulo} onChange={(e)=>setSubtitulo(e.target.value)} className="form-control form-control-sm"/>
+                    </div>
+                </div>
+                <ReactQuill 
+                    ref={(ele)=>{if(ele){editor=ele.getEditor(); editorRef=ele.makeUnprivilegedEditor(ele.getEditor())}}} 
+                    theme="snow" value={cuerpo} onChange={(e) => editorChange(e)} formats={formats} modules={modules} 
+                />
+                <div className="form-group mt-3">
+                    <button onClick={uploadNota} className="btn btn-lg btn-dark">Guardar</button>
+                </div>
             </div>
         </div>
     );

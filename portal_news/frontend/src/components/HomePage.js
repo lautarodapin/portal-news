@@ -10,6 +10,8 @@ import {
 import RoomList from "./RoomList";
 import Room from "./Room";
 import NotaPage from "./NotaPage";
+import Nota from "./Nota";
+import NotaList from "./NotaList";
 
 export default class HomePage extends Component {
   constructor(props) {
@@ -37,9 +39,9 @@ export default class HomePage extends Component {
           <Route exact path="/frontend/rooms/:room/">
             <Room></Room>
           </Route>
-          <Route exact path="/frontend/notas/">
-            <NotaPage/>
-          </Route>
+          <Route exact path="/frontend/notas/" component={NotaList} />
+          <Route exact path="/frontend/crear/nota/" component={NotaPage} />
+          <Route exact path="/frontend/nota/:slug/" component={Nota} />
         </Switch>
       </Router>
     );

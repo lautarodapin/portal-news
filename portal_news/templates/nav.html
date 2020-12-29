@@ -3,7 +3,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             {% url 'news_app:nota-list' as link %}
-            <a class="navbar-brand {% is_active link %} ml-2" href="{{ link }}">
+            <a class="navbar-brand {% is_active "/frontend/notas/" %} ml-2" href="/frontend/notas/">
                 LOGO
             </a>
             <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
@@ -11,19 +11,19 @@
 
                     <li class="nav-item">
                         {% url 'news_app:nota-list' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                        <a class="nav-link {% is_active "/frontend/notas/" %}" href="/frontend/notas/">
                             Inicio
                         </a>
                     </li>
                     <li class="nav-item">
                         {% url 'news_app:nota-create' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                        <a class="nav-link {% is_active "/frontend/crear/nota/" %}" href="/frontend/crear/nota/">
                             Crear nota
                         </a>
                     </li>
                     <li class="nav-item">
                         {% url 'chat:room-list' as link %}
-                        <a class="nav-link {% is_active link %}" href="{{ link }}">
+                        <a class="nav-link {% is_active "/frontend/rooms/" %}" href="/frontend/rooms/">
                             Chat Rooms
                         </a>
                     </li>

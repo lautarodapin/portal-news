@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
 from tinymce.models import HTMLField
 import cloudinary
@@ -19,7 +21,7 @@ class Usuario(AbstractUser):
 
 
 class Nota(AbstractDate):
-    titulo = models.CharField(max_length=255)
+    titulo:str = models.CharField(max_length=255)
     subtitulo = models.CharField(max_length=255, blank=True, null=True)
     cuerpo = HTMLField()
     slug = models.SlugField(blank=True, unique=True, editable=False)
@@ -41,8 +43,3 @@ class Imagen(AbstractDate):
     class Meta:
         abstract = False
     imagen: CloudinaryField = CloudinaryField('image')
-
-    # def delete(self, *args, **kwargs):
-    #     cloudinary.uploader.destroy(self.imagen.public_id)
-    #     return super().delete(*args, **kwargs)
-    
