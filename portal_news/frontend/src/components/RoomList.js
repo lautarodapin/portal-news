@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
+import { Grid, Button, ButtonGroup, Typography, Box } from "@material-ui/core";
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -49,12 +49,19 @@ const RoomForm = (props) => {
 			.then(data => { console.log(data); props.onChange(data); }, (error) => null);
 	};
 	return (
-		<div className="form-group">
-			<label>
-				Nombre: 
-			<input type="text" className="form-control" onChange={(e) => setNombre(e.target.value)} value={nombre} />
-			</label>
-			<button onClick={submitHandler} className="m-3 btn btn-lg btn-dark">Crear</button>
+		<div className="jumbotron text-center jumbotron-fluid">
+			<div className="display-2">
+				Cree un nuevo room
+			</div>
+			<div className="form-group">
+				<label>
+					Nombre: 
+				<input type="text" className="form-control" onChange={(e) => setNombre(e.target.value)} value={nombre} />
+				</label>
+				<button onClick={submitHandler} className="m-3 btn btn-lg btn-dark">Crear</button>
+			</div>
+			<div className="display-4 text-muted">O ingrese a uno ya creado</div>
+
 		</div>
 	);
 };
@@ -71,12 +78,15 @@ export function RoomList() {
 	);
 	const newRoom = (data) => { setRoom((room => [data, ...room])) };
 	return (
-		<Grid>{
-			room?.map((item) => (
-				<Room room={item} />
-			))
-		}
+		<Grid>
 			<RoomForm onChange={newRoom} />
+			<Box component="div" overflow="auto" maxHeight="50vh">
+			{
+				room?.map((item) => (
+					<Room room={item} />
+					))
+				}
+		</Box>
 		</Grid>
 	);
 }

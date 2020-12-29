@@ -14,11 +14,11 @@ export function Room() {
 	const [messages, setMessages] = useState();
 	const [users, setUsers] = useState(null);
 	const [messageText, setMessageText] = useState(null);
-	const [ws, setWs] = useState(()=> new WebSocket(`ws://${host}/ws/messages/`))
+	const [ws, setWs] = useState(()=> new WebSocket(`${ws_scheme}://${host}/ws/messages/`))
 	const updateMessageText = (e)=>setMessageText(e.target.value)
 
 
-	const getRoom = () => fetch(`http://${host}/api/rooms/?code=${room_code}`)
+	const getRoom = () => fetch(`/api/rooms/?code=${room_code}`)
 	.then((data) => data.json()).then(data=>{
 		setRoom(data[0]);
 		setMessages(data[0].messages);
@@ -26,20 +26,19 @@ export function Room() {
 	
 	useEffect(() => getRoom(), []);
 
-	useEffect(()=>{
-		const listener = event=>event.code==="Enter"?submitMessage():null;
-		document.addEventListener("keydown", listener);
-		return ()=>document.removeEventListener("keydown", listener)
-	}, []);
+
+	const enterPress = (e) => e.keyCode === 13?submitMessage():null;
 
 	const submitMessage = ()=>{
 		console.log(messageText)
-		ws.send(JSON.stringify({
-			action:"create_message",
-			message:messageText,
-			request_id:session_key,
-		}));
-		setMessageText(messageText=>"");
+		if (messageText != null){
+			ws.send(JSON.stringify({
+				action:"create_message",
+				message:messageText,
+				request_id:session_key,
+			}));
+		}
+		setMessageText("");
 	};
 
 	ws.onmessage = function (e) {
@@ -52,9 +51,6 @@ export function Room() {
 			setUsers(data.usuarios);
 		}
 		if (data.action === "create" && data.type==="message.activity"){
-			// var temp = room[0].messages;
-			// temp.push(data)
-			// setMessages(temp)
 			setMessages(oldMessages=>[...oldMessages, data]);
 		}
 	}
@@ -79,7 +75,7 @@ export function Room() {
 	}
 	ws.onclose = function (e) {
 		console.error('Chat socket closed unexpectedly');
-		setTimeout(() => ws = new WebSocket(`ws://${host}/ws/messages/`), 1000 * 10);
+		setTimeout(() =>setWs(new WebSocket(`${ws_scheme}://${host}/ws/messages/`)), 1000 * 10);
 	};
 
 
@@ -98,15 +94,20 @@ export function Room() {
 			</h3>
 			<div className="row">
 				<div className="col-xl-2 col-md-12 col-sm-12">
-					<ul class="list-group">
-						{users?.map(user=>(
-							<li class="list-group-item">{user.username}</li>
-							))}
-					</ul>
-
-					<div className="form-group mt-5">
-						<textarea onChange={(e)=>setMessageText(e.target.value)} value={messageText} className="form-control" rows="3" placeholder="Mensaje"/>
-						<button onClick={submitMessage} className="btn btn-lg btn-dark">Enviar</button>
+					<div className="row justify-content-center">
+						<div className="col-12 mb-2">
+							<ul class="list-group">
+								{users?.map(user=>(
+									<li class="list-group-item">{user.username}</li>
+									))}
+							</ul>
+						</div>
+						<div className="col-12 mb-2">
+								<textarea onKeyDown={enterPress} onChange={(e)=>setMessageText(e.target.value)} value={messageText} className="form-control" rows="3" placeholder="Mensaje"/>
+						</div>
+						<div className="col-12 mb-2">
+								<button onClick={submitMessage} className="btn btn-lg btn-dark">Enviar</button>
+						</div>
 					</div>
 				</div>
 				<div className="col">

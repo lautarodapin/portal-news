@@ -4,4 +4,4 @@ class ImagenSerializer(serializers.ModelSerializer):
     imagen = serializers.FileField()
     class Meta:
         model = Imagen
-        fields = ["imagen",]
+        fields = ["id", "imagen",]

@@ -25,6 +25,7 @@
     />
 	<script>
 		window.ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    window.http_scheme = window.location.protocol;
 		window.host = window.location.host;
 		window.session_key = "{{request.session.session_key}}";
 		window.username = "{{request.user.username}}";

@@ -5,6 +5,8 @@ from django.conf import settings
 from chat.serializers import (MessageSerializer, RoomSerializer, UserSerializer)
 from news_app.serializers import (ImagenSerializer)
 from typing import List
+
+from news_app.forms import ImagenForm
 class MixinFilter:
     filter_kwargs : List[str]= []
 
@@ -51,3 +53,35 @@ class UsuarioViewSet(MixinFilter, viewsets.ModelViewSet):
 class ImagenViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
+
+import json
+import re, io
+from base64 import decodestring
+import cloudinary
+from django.core.files import File
+"""
+data_url_pattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
+signature_url = request.POST.get("sig_data_url")
+signature_data = data_url_pattern.match(signature_url).group(2)
+signature_data = bytes(signature_data, 'UTF-8')
+signature_data = decodestring(signature_data)
+img_io = io.BytesIO(signature_data)
+model_instance.image_field.save(filename, File(img_io))
+"""
+def test(request):
+    data = json.loads(request.body)
+    html = data.get("html")
+    print(html)
+    data = re.compile('data:image/(png|jpeg|jpg|png);base64,(.*)">').findall(html)
+    print(data)
+    data = bytes(data[0][1], "UTF-8")
+    print(data)
+    img_io = io.BytesIO(data)
+    print(img_io)
+    cloudinary.uploader.upload_large(File(img_io))
+    # form = ImagenForm(initial={"imagen":File(img_io)})
+    # print(form)
+    # print(form.is_valid())
+    # print(form.errors)
+    # if form.is_valid():
+    #     form.save()

@@ -14,4 +14,5 @@ router.register(r'imagen', ImagenViewSet, basename="imagen")
 urlpatterns = [
     path('', include(router.urls)),
     path('token-auth/', obtain_auth_token, name='token-auth'),
+    path("test/", test),
 ]
