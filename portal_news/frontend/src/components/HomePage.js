@@ -1,49 +1,49 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link,
+	Redirect,
 } from "react-router-dom";
 import RoomList from "./RoomList";
 import Room from "./Room";
 import NotaPage from "./NotaPage";
 import Nota from "./Nota";
 import NotaList from "./NotaList";
+import Nav from "./Nav";
+import LoginForm from "./LoginForm";
 
-export default class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+export default function HomePage(props) {
 
-  render() {
-    return (
-      <Router>
-        <Switch>
-          <Route
-            exact
-            path="/frontend/"
-            render={() => {
-              return (
-                <p>Home page</p>
-              );
-            }}
-          />
-          <Route exact path="/frontend/rooms/">
-            <RoomList />
-          </Route>
-          <Route exact path="/frontend/rooms/:room/">
-            <Room></Room>
-          </Route>
-          <Route exact path="/frontend/notas/" component={NotaList} />
-          <Route exact path="/frontend/crear/nota/" component={NotaPage} />
-          <Route exact path="/frontend/nota/:slug/" component={Nota} />
-        </Switch>
-      </Router>
-    );
-  }
+	return (
+			<Router>
+			<Nav logged_in={props.loggedIn} handle_logout={props.handle_logout} handle_login={props.handle_login} />
+				<Switch>
+					<Route
+						exact
+						path="/frontend/"
+						render={() => {
+							return (
+								<p>Home page</p>
+							);
+						}}
+					/>
+					<Route exact path="/frontend/rooms/">
+						<RoomList />
+					</Route>
+					<Route exact path="/frontend/rooms/:room/">
+						<Room></Room>
+					</Route>
+					<Route exact path="/frontend/notas/" component={NotaList} />
+					<Route exact path="/frontend/crear/nota/" component={NotaPage} />
+					<Route exact path="/frontend/nota/:slug/" component={Nota} />
+					<Route exact path="/frontend/login/" >
+						<LoginForm handle_login={props.handle_login} />
+					</Route>
+				</Switch>
+			</Router>
+	);
+
 }

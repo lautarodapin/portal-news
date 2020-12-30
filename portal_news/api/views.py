@@ -1,8 +1,10 @@
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, views
+from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from chat.models import (Message, Room,)
 from news_app.models import (Usuario, Imagen, Nota, Comentario)
 from django.conf import settings
-from chat.serializers import (MessageSerializer, RoomSerializer, UserSerializer)
+from chat.serializers import (MessageSerializer, RoomSerializer, UserSerializer, UserSerializerWithToken)
 from news_app.serializers import (ImagenSerializer, NotaSerializer, ComentarioSerializer)
 from typing import List
 from rest_framework.response import Response
@@ -65,6 +67,26 @@ class ComentarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
     lookup_field = 'pk'
+
+
+@api_view(["GET"])
+def current_user(request):
+    return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
+
+class UserList(views.APIView):
+    """
+    Create a new user. It's called 'UserList' because normally we'd have a get
+    method here too, for retrieving a list of all User objects.
+    """
+
+    permission_classes = (AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def test(request):

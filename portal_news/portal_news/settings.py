@@ -68,6 +68,10 @@ INSTALLED_APPS = [
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'api.utils.my_jwt_response_handler'
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
