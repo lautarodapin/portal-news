@@ -14,12 +14,15 @@ import Nota from "./Nota";
 import NotaList from "./NotaList";
 import Nav from "./Nav";
 import LoginForm from "./LoginForm";
+import { UserProvider } from "../contexts/UserContext";
+// import { CounterProvider } from "../contexts/CounterContext";
 
 export default function HomePage(props) {
 
 	return (
-			<Router>
-			<Nav logged_in={props.loggedIn} handle_logout={props.handle_logout} handle_login={props.handle_login} />
+		<Router>
+			<UserProvider>
+				<Nav />
 				<Switch>
 					<Route
 						exact
@@ -38,12 +41,17 @@ export default function HomePage(props) {
 					</Route>
 					<Route exact path="/frontend/notas/" component={NotaList} />
 					<Route exact path="/frontend/crear/nota/" component={NotaPage} />
-					<Route exact path="/frontend/nota/:slug/" component={Nota} />
+					<Route exact path="/frontend/nota/:slug/">
+						{/* <CounterProvider> */}
+						<Nota></Nota>
+						{/* </CounterProvider> */}
+					</Route>
 					<Route exact path="/frontend/login/" >
-						<LoginForm handle_login={props.handle_login} />
+						<LoginForm />
 					</Route>
 				</Switch>
-			</Router>
+			</UserProvider>
+		</Router>
 	);
 
 }

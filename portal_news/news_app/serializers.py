@@ -25,7 +25,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         data = self.context["request"].data
-        validated_data["autor"] = Usuario.objects.get(pk=data["autor"])
+        validated_data["autor"] = self.context["request"].user #Usuario.objects.get(pk=data["autor"])
         validated_data["nota"] = Nota.objects.get(slug=data["nota"])
         return super().create(validated_data)
 

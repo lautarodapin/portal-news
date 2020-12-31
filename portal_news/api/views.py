@@ -1,6 +1,6 @@
 from rest_framework import status, viewsets, views
 from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from chat.models import (Message, Room,)
 from news_app.models import (Usuario, Imagen, Nota, Comentario)
 from django.conf import settings
@@ -42,35 +42,42 @@ class RoomViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_kwargs = ["code", "nombre__icontains"]
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 class MessageViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_kwargs = ["room__nombre__icontains", "user__username__icontains"]
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 class UsuarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 
 class ImagenViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 class NotaViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Nota.objects.all()
     serializer_class = NotaSerializer
     filter_kwargs = ["slug",]
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 class ComentarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 
 @api_view(["GET"])
 def current_user(request):
+    print(request.user)
     return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
 
 class UserList(views.APIView):
