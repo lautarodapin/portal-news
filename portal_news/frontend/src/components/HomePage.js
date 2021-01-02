@@ -14,7 +14,8 @@ import Nota from "./Nota";
 import NotaList from "./NotaList";
 import Nav from "./Nav";
 import LoginForm from "./LoginForm";
-import { UserProvider } from "../contexts/UserContext";
+import  {UserProvider}  from "../contexts/UserContext";
+import { RegisterForm } from "./RegisterForm";
 // import { CounterProvider } from "../contexts/CounterContext";
 
 export default function HomePage(props) {
@@ -34,6 +35,7 @@ export default function HomePage(props) {
 						}}
 					/>
 					<Route exact path="/frontend/rooms/">
+
 						<RoomList />
 					</Route>
 					<Route exact path="/frontend/rooms/:room/">
@@ -48,6 +50,9 @@ export default function HomePage(props) {
 					</Route>
 					<Route exact path="/frontend/login/" >
 						<LoginForm />
+					</Route>
+					<Route exact path="/frontend/register/" >
+						<RegisterForm />
 					</Route>
 				</Switch>
 			</UserProvider>

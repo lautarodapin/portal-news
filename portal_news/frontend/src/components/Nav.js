@@ -84,11 +84,18 @@ export function Nav(props) {
 						</li>
 						</>
 					):(
+						<>
 						<li className="nav-item">
 							<a className="flex-sm-fill text-sm-center nav-link" href="/frontend/login/">
 							Login
 							</a>
 						</li>
+						<li className="nav-item">
+							<a className="flex-sm-fill text-sm-center nav-link" href="/frontend/register/">
+							Registrarse
+							</a>
+						</li>
+						</>
 					)
 					}
                 </ul>

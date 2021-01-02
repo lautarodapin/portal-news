@@ -1,6 +1,8 @@
 from rest_framework import status, viewsets, views
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 from chat.models import (Message, Room,)
 from news_app.models import (Usuario, Imagen, Nota, Comentario)
 from django.conf import settings
@@ -50,9 +52,12 @@ class MessageViewSet(MixinFilter, viewsets.ModelViewSet):
     filter_kwargs = ["room__nombre__icontains", "user__username__icontains"]
     permission_classes = [IsAuthenticatedOrReadOnly,]
 
+
+@method_decorator(ensure_csrf_cookie, name="dispatch")
 class UsuarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UserSerializer
+    # serializer_class = UserSerializer
+    serializer_class = UserSerializerWithToken
     permission_classes = [IsAuthenticatedOrReadOnly,]
 
 

@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, useContext } from "react";
 import { Grid, Button, ButtonGroup, Typography, Box } from "@material-ui/core";
 import {
 	BrowserRouter as Router,
@@ -7,9 +7,11 @@ import {
 	Link,
 	Redirect,
 } from "react-router-dom";
-
+import UserContext from "../contexts/UserContext";
+import { LoginLink } from "./singleComponents/LoginLink";
 
 const Room = (props) => {
+	const {isLog} = useContext(UserContext);
 	const room = props.room;
 	const host = room.host;
 	const current_users = room.current_users;
@@ -30,7 +32,7 @@ const Room = (props) => {
 						</li>
 					))}
 				</ul>
-				<Link className="btn btn-dark mt-3" to={`/frontend/rooms/${code}`}>Ingresar</Link>
+				{isLog && <Link className="btn btn-dark mt-3" to={`/frontend/rooms/${code}`}>Ingresar</Link>}
 			</div>
 		</div>
 
@@ -66,20 +68,28 @@ const RoomForm = (props) => {
 	);
 };
 export function RoomList() {
-
+	const {isLog, polling} = useContext(UserContext);
 	const [room, setRoom] = useState(null);
 	const [nombre, setNombre] = useState(null);
 	const [roomCreado, setRoomCreado] = useState(null);
 	useEffect(() => getRoom(), []);
 
-	const getRoom = () => fetch(`http://${host}/api/rooms/`).then((r) => r.json()).then(data => setRoom(room => data));
+	const getRoom = () => fetch(`/api/rooms/`).then((r) => r.json()).then(data => setRoom(room => data));
 	if (room == null) return (
 		<div>Cargando...</div>
 	);
 	const newRoom = (data) => { setRoom((room => [data, ...room])) };
+
+	// console.log(isLog, polling);
+	// if (!isLog && !polling) {
+	// 	return (<Redirect to="/frontend/login/"/>)
+	// }
 	return (
 		<Grid>
-			<RoomForm onChange={newRoom} />
+			{isLog?<RoomForm onChange={newRoom} />:(
+				<LoginLink/>
+			)}
+			
 			<Box component="div" overflow="auto" maxHeight="50vh">
 			{
 				room?.map((item) => (

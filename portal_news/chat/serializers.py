@@ -33,8 +33,23 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ('token', 'username', 'password')
-
+        # fields = ('token', 'username', 'password')
+        fields = "__all__"
+        read_only_fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "is_staff",
+            "is_superuser",
+            "groups",
+            "user_permissions",
+            "is_active",
+            "date_joined",
+            "password",
+            "last_login",
+            "is_active",
+            "groups",
+        ]
 class MessageSerializer(serializers.ModelSerializer):
     created_at_formatted = serializers.SerializerMethodField()
     user = UserSerializer()
