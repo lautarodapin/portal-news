@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, useContext } from "react";
 import { Grid, Button, ButtonGroup, Typography, Box, Card, CardContent, CardMedia, CardActionArea, CardActions, IconButton, CardHeader } from "@material-ui/core";
 import {
 	BrowserRouter as Router,
@@ -9,8 +9,11 @@ import {
 } from "react-router-dom";
 import parse from 'html-react-parser';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import UserContext from "../contexts/UserContext";
+import { LoginLink } from "./singleComponents/LoginLink";
 
 export function NotaList() {
+	const {isLog, polling} = useContext(UserContext);
 	const [notas, setNotas] = useState(null);
 	useEffect(()=>getNotas(), []); // ! la lista vacia hace que solo se ejecute en el inicio
 	const getNotas = ()=>fetch(`/api/nota/`).then(r=>r.json()).then(data=>setNotas(data));
@@ -18,6 +21,7 @@ export function NotaList() {
 	
 	return (
 		<div className="container-fluid">
+			{isLog?
 			<div className="jumbotron jumbotron-fluid">
 				<Grid container justify="center" alignItems="center">
 					<Typography variant="h2">
@@ -25,6 +29,9 @@ export function NotaList() {
 					</Typography>
 				</Grid>
 			</div>
+			:
+			<LoginLink></LoginLink>
+			}
 			<div className="container mt-2">
 				<Grid container spacing={2} direction="row">
 						{notas?.map(nota=>(
