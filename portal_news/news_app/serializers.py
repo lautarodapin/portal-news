@@ -38,7 +38,6 @@ class ComentarioSerializer(serializers.ModelSerializer):
 
 
 class NotaSerializer(serializers.ModelSerializer):
-    titulo = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField(read_only=True)
     mod_at = serializers.SerializerMethodField(read_only=True)
     comentarios = serializers.SerializerMethodField()
@@ -46,6 +45,11 @@ class NotaSerializer(serializers.ModelSerializer):
         model = Nota
         fields = ["id", "titulo", "subtitulo", "cuerpo", "autor", "slug", "created_at", "mod_at", "comentarios"]
         lookup_field = "slug"
+        read_only_fields = ["autor",]
+
+    def create(self, validated_data):
+        validated_data["autor"] = self.context["request"].user
+        return super().create(validated_data=validated_data)
 
     def get_created_at(self, obj:Nota):
         return naturaltime(obj.created_at)
@@ -55,9 +59,6 @@ class NotaSerializer(serializers.ModelSerializer):
 
     def get_cuerpo(self, obj:Nota)->str:
         return mark_safe(obj.cuerpo)
-
-    def get_titulo(self, obj:Nota)->str:
-        return obj.titulo.capitalize()
 
     def get_comentarios(self, obj:Nota):
         return ComentarioSerializer(obj.comentarios.order_by('created_at'), many=True, context=self.context).data

@@ -6,8 +6,13 @@ import {BrowserRouter as Router,Switch,Route,Link,Redirect,useParams,
 import Chat from './Chat.js';
 import ChatUsers from './ChatUsers.js';
 import { AlwaysScrollToBottom } from "./utils/AlwaysScrollToBottom";
+import { getCookie } from "./utils/GetCookie";
+import {host, protocol, ws_scheme, api} from "../globals";
 
 export function Room() {
+    const api = `${window.location.protocol}//${window.location.protocol === "https:"?window.location.host:"localhost:8000"}`;
+	const ws_scheme = window.location.protocol === "https:"?"wss":"ws";
+	const host = window.location.protocol === "https:"?window.location.host:"localhost:8000";//"localhost:8000"//window.location.host; // todo chequear 
 	let params = useParams(); // params.room
 	const room_code = params.room;
 	const [room, setRoom] = useState(null);
@@ -17,8 +22,7 @@ export function Room() {
 	const [ws, setWs] = useState(()=> new WebSocket(`${ws_scheme}://${host}/ws/messages/`))
 	const updateMessageText = (e)=>setMessageText(e.target.value)
 
-
-	const getRoom = () => fetch(`/api/rooms/?code=${room_code}`)
+	const getRoom = () => fetch(`${api}/api/rooms/?code=${room_code}`)
 	.then((data) => data.json()).then(data=>{
 		setRoom(data[0]);
 		setMessages(data[0].messages);
@@ -35,7 +39,7 @@ export function Room() {
 			ws.send(JSON.stringify({
 				action:"create_message",
 				message:messageText,
-				request_id:session_key,
+				request_id:getCookie("csrftoken"),
 			}));
 		}
 		setMessageText("");
@@ -57,19 +61,19 @@ export function Room() {
 	ws.onopen = function () {
 		if (room != null){
 			ws.send(JSON.stringify({
+				pk: room.pk,
+				action: "join_room",
+				request_id: getCookie("csrftoken"),
+			}));
+			ws.send(JSON.stringify({
 				action: "subscribe_instance",
 				pk: room.pk,
-				request_id: session_key,
+				request_id: getCookie("csrftoken"),
 			}));
 			ws.send(JSON.stringify({
 				action: "subscribe_to_messages_in_room",
 				pk: room.pk,
-				request_id: session_key,
-			}));
-			ws.send(JSON.stringify({
-				pk: room.pk,
-				action: "join_room",
-				request_id: session_key,
+				request_id: getCookie("csrftoken"),
 			}));
 		}
 	}

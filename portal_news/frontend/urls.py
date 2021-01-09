@@ -9,5 +9,6 @@ from django.utils.decorators import method_decorator
 
 urlpatterns = [
     # path('', lambda r, *args, **kwargs: render(r, 'frontend/index.html')),
-    re_path(r'^(?:.*)/?$', ensure_csrf_cookie(lambda r, *args, **kwargs: render(r, 'frontend/index.html')), name='frontend'),
+    re_path(r'^(?:.*)/?$', ensure_csrf_cookie(lambda r, *args, **kwargs: render(r, 'index.html')), name='frontend'),
+    # re_path(r'^(?:.*)/?$', ensure_csrf_cookie(lambda r, *args, **kwargs: render(r, 'frontend/index.html')), name='frontend'),
 ]

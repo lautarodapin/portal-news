@@ -14,6 +14,7 @@ import HomePage from "./HomePage";
 import RoomList from "./RoomList";
 import LoginForm from "./LoginForm";
 import Nav from "./Nav";
+import reportWebVitals from '../reportWebVitals';
 
 export default function App() {
 	const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("token") ? true : false)
@@ -54,5 +55,6 @@ export default function App() {
 	);
 }
 
-const appDiv = document.getElementById("app");
+const appDiv = document.getElementById("root");
 render(<App />, appDiv);
+reportWebVitals();

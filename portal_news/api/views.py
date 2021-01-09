@@ -67,17 +67,24 @@ class ImagenViewSet(MixinFilter, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly,]
 
 class NotaViewSet(MixinFilter, viewsets.ModelViewSet):
-    queryset = Nota.objects.all()
+    queryset = Nota.objects.all().order_by('-created_at')
     serializer_class = NotaSerializer
     filter_kwargs = ["slug",]
     lookup_field = 'slug'
     permission_classes = [IsAuthenticatedOrReadOnly,]
+
+    def perform_create(self, serializer:NotaSerializer):
+        return super().perform_create(serializer)
 
 class ComentarioViewSet(MixinFilter, viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
     lookup_field = 'pk'
     permission_classes = [IsAuthenticatedOrReadOnly,]
+
+    # def perform_create(self, serializer):
+    #     print(serializer)
+    #     return serializer.save(**{"autor":self.request.user}) 
 
 
 @api_view(["GET"])

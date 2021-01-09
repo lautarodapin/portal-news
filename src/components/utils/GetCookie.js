@@ -1,3 +1,5 @@
+import jQuery from 'jquery'; 
+
 export const getCookie = (name) => {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

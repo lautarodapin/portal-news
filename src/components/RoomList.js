@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { LoginLink } from "./singleComponents/LoginLink";
+import { getCookie } from "./utils/GetCookie";
 
 const Room = (props) => {
 	const {isLog} = useContext(UserContext);
@@ -42,9 +43,9 @@ const Room = (props) => {
 const RoomForm = (props) => {
 	const [nombre, setNombre] = useState("")
 	const submitHandler = () => {
-		fetch(`http://${host}/api/rooms/`, {
+		fetch(`/api/rooms/`, {
 			method: "POST",
-			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': $(token).val(), },
+			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': getCookie("csrftoken"),},//'X-CSRFToken': $(token).val(), },
 			body: JSON.stringify({ nombre: nombre })
 		})
 			.then(response => response.json())

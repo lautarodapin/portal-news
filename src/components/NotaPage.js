@@ -8,12 +8,14 @@ import {
     BrowserRouter as Router, Switch, Route, Link, Redirect, useParams,
 } from "react-router-dom";
 import { AlwaysScrollToBottom } from "./utils/AlwaysScrollToBottom";
-
+import { getCookie } from "./utils/GetCookie";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 export function NotaPage() {
+    const api = `${window.location.protocol}//${window.location.protocol === "https:"?window.location.host:"localhost:8000"}`;
+    console.log(api)
     let params = useParams();
     var editor = useRef(null);
     var editorRef = useRef(null);
@@ -37,9 +39,13 @@ export function NotaPage() {
     const [subtitulo, setSubtitulo] = useState(null)
     const [cuerpo, setCuerpo] = useState('');
     const editorChange = (e)=>setCuerpo(e);
-    const uploadNota = ()=>fetch(`/api/nota/`, {
+    const uploadNota = ()=>fetch(`${api}/api/nota/`, {
         method:"POST",
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': $(token).val(), },
+        headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json', 
+            Authorization: `JWT ${localStorage.getItem("token")}`, 
+            'X-CSRFToken': getCookie("csrftoken"),},// 'X-CSRFToken': $(token).val(), },
         body:JSON.stringify({
             titulo:titulo,
             subtitulo:subtitulo,
